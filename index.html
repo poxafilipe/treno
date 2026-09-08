@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Treino</title>
+<meta name="theme-color" content="#2c4a34">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Treino">
+<link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjogIlRyZWlubyIsICJzaG9ydF9uYW1lIjogIlRyZWlubyIsICJzdGFydF91cmwiOiAiLi8iLCAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwgImJhY2tncm91bmRfY29sb3IiOiAiI2ZiZmFmNyIsICJ0aGVtZV9jb2xvciI6ICIjMmM0YTM0In0=">
+<style>
+  :root{
+    --ink:#171512;
+    --soft:#6d675c;
+    --line:#dcd7cc;
+    --rule:#a8a294;
+    --mark:#2c4a34;
+    --marcado:#eef2e9;
+    --paper:#fbfaf7;
+  }
+
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+
+  html{-webkit-text-size-adjust:100%}
+
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    font-size:16px;
+    line-height:1.45;
+    padding-bottom:calc(84px + env(safe-area-inset-bottom));
+  }
+
+  h1,h2,h3{margin:0;font-weight:700;letter-spacing:-0.01em}
+
+  /* ---------- topo fixo ---------- */
+  header{
+    position:sticky;
+    top:0;
+    z-index:20;
+    background:var(--mark);
+    color:#f4f2ec;
+    padding:calc(10px + env(safe-area-inset-top)) 0 0;
+  }
+  .titulo{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:12px;
+    padding:0 16px 8px;
+  }
+  .titulo h1{font-size:17px}
+  .titulo span{font-size:12px;opacity:.75}
+
+  nav{
+    display:flex;
+    gap:6px;
+    overflow-x:auto;
+    padding:0 12px 10px;
+    scrollbar-width:none;
+  }
+  nav::-webkit-scrollbar{display:none}
+  nav button{
+    flex:0 0 auto;
+    appearance:none;
+    border:1px solid rgba(244,242,236,.35);
+    background:transparent;
+    color:#f4f2ec;
+    font:inherit;
+    font-size:14px;
+    font-weight:600;
+    padding:9px 14px;
+    border-radius:999px;
+    min-height:40px;
+    cursor:pointer;
+  }
+  nav button[aria-selected="true"]{
+    background:#f4f2ec;
+    color:var(--mark);
+    border-color:#f4f2ec;
+  }
+
+  /* ---------- paineis ---------- */
+  main{padding:16px 14px 24px;max-width:820px;margin:0 auto}
+  .painel[hidden]{display:none}
+
+  .cabeca{margin-bottom:12px}
+  .cabeca h2{font-size:20px}
+  .cabeca p{margin:5px 0 0;font-size:13.5px;color:var(--soft)}
+
+  /* ---------- cartoes ---------- */
+  .opcao{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:13px 15px;
+    margin-bottom:11px;
+    cursor:pointer;
+    transition:border-color .12s ease, background .12s ease;
+  }
+  .opcao[data-escolhida="1"]{
+    border-color:var(--mark);
+    background:var(--marcado);
+    box-shadow:inset 3px 0 0 var(--mark);
+  }
+  .opcao:focus-visible{outline:2px solid var(--mark);outline-offset:2px}
+
+  .topo-opcao{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    margin-bottom:8px;
+  }
+  .topo-opcao h3{font-size:15.5px;flex:1}
+  .kcal{
+    font-size:12.5px;
+    font-weight:700;
+    font-variant-numeric:tabular-nums;
+    color:var(--mark);
+    white-space:nowrap;
+  }
+  .marca{
+    width:20px;height:20px;flex:0 0 auto;
+    border:1.5px solid var(--rule);
+    border-radius:50%;
+    position:relative;
+    align-self:center;
+  }
+  .opcao[data-escolhida="1"] .marca{background:var(--mark);border-color:var(--mark)}
+  .opcao[data-escolhida="1"] .marca::after{
+    content:"";
+    position:absolute;left:6px;top:2.5px;
+    width:5px;height:10px;
+    border:solid #fff;border-width:0 2px 2px 0;
+    transform:rotate(45deg);
+  }
+
+  .itens{list-style:none;margin:0;padding:0}
+  .itens li{
+    display:flex;
+    align-items:baseline;
+    font-size:14px;
+    padding:2px 0;
+    color:#2b2822;
+  }
+  .itens .nome{flex:0 1 auto}
+  .itens .pontos{
+    flex:1 1 auto;
+    margin:0 6px;
+    border-bottom:1px dotted var(--line);
+    transform:translateY(-4px);
+    min-width:10px;
+  }
+  .itens .qtd{flex:0 0 auto;font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap}
+
+  /* ---------- registro de carga ---------- */
+  .registro{
+    display:flex;align-items:center;gap:8px;
+    margin-top:10px;padding-top:9px;
+    border-top:1px dashed var(--line);
+    font-size:12.5px;color:var(--soft);
+  }
+  .registro label{display:flex;align-items:center;gap:5px}
+  .registro input{
+    width:62px;font:inherit;font-size:14px;font-weight:600;
+    padding:6px 8px;border:1px solid var(--line);border-radius:8px;
+    background:#fff;color:var(--ink);text-align:center;
+    font-variant-numeric:tabular-nums;
+  }
+  .registro input:focus{outline:2px solid var(--mark);outline-offset:1px;border-color:var(--mark)}
+
+  /* ---------- notas e tabelas ---------- */
+  .aviso{
+    background:#fff;
+    border:1px solid var(--line);
+    border-left:4px solid var(--mark);
+    border-radius:10px;
+    padding:12px 14px;
+    margin-bottom:11px;
+    font-size:14px;
+    color:var(--soft);
+  }
+  .aviso b{color:var(--ink);font-weight:600}
+
+  .tabela{margin-bottom:22px}
+  .tabela h3{font-size:15px;margin-bottom:7px}
+  table{width:100%;border-collapse:collapse;font-size:14px;background:#fff}
+  th{
+    text-align:left;font-weight:600;font-size:12.5px;color:var(--soft);
+    border-bottom:1px solid var(--rule);padding:0 0 4px;
+  }
+  td{padding:6px 0;border-bottom:1px solid var(--line);vertical-align:top}
+  td:not(:first-child),th:not(:first-child){text-align:right;white-space:nowrap;padding-left:8px;font-variant-numeric:tabular-nums}
+  td:last-child,th:last-child{font-weight:600}
+  .legenda{font-size:12.5px;color:var(--soft);margin:7px 0 0}
+
+  /* ---------- barra do total ---------- */
+  .total{
+    position:fixed;
+    left:0;right:0;bottom:0;
+    z-index:30;
+    background:rgba(251,250,247,.96);
+    backdrop-filter:saturate(140%) blur(8px);
+    border-top:1px solid var(--rule);
+    padding:10px 16px calc(10px + env(safe-area-inset-bottom));
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .total .num{font-size:21px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.1}
+  .total .num small{font-size:13px;font-weight:600;color:var(--soft)}
+  .total .rot{font-size:12px;color:var(--soft);line-height:1.2}
+  .total .faixa{flex:1;min-width:0}
+  .barra{height:5px;background:var(--line);border-radius:3px;margin-top:6px;overflow:hidden}
+  .barra + .barra{margin-top:4px}
+  .barra i{display:block;height:100%;background:var(--mark);width:0;transition:width .2s ease}
+  .barra.prot i{background:#8a6d3b}
+  .total button{
+    appearance:none;border:1px solid var(--rule);background:#fff;color:var(--ink);
+    font:inherit;font-size:13px;font-weight:600;padding:9px 13px;border-radius:9px;
+    min-height:42px;cursor:pointer;flex:0 0 auto;
+  }
+
+  @media (min-width:700px){
+    .listagem{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
+    .tabelas{display:grid;grid-template-columns:1fr 1fr;gap:0 26px}
+  }
+
+  @media print{
+    body{padding:0;background:#fff;font-size:9.4pt}
+    header,.total{display:none}
+    .painel[hidden]{display:block !important}
+    main{max-width:none;padding:0}
+    .painel{break-before:page}
+    .painel:first-of-type{break-before:auto}
+    .listagem{display:block;column-count:3;column-gap:20px}
+    .opcao{break-inside:avoid;border-radius:0;border:0;border-top:1px solid #cfc9bd;padding:8px 0;background:#fff !important;box-shadow:none !important}
+    .tabelas{column-count:2;column-gap:26px}
+    .tabela{break-inside:avoid}
+  }
+
+  .dica{margin:6px 0 0;font-size:13px;color:var(--soft);line-height:1.4}
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="titulo">
+    <h1>Treino</h1>
+    <span>5 dias · Smart Fit</span>
+  </div>
+  <nav id="abas" role="tablist">
+    <button role="tab" aria-selected="true" data-alvo="pushA">Push A</button>
+    <button role="tab" aria-selected="false" data-alvo="pullA">Pull A</button>
+    <button role="tab" aria-selected="false" data-alvo="perna">Perna</button>
+    <button role="tab" aria-selected="false" data-alvo="pushB">Push B</button>
+    <button role="tab" aria-selected="false" data-alvo="pullB">Pull B</button>
+    <button role="tab" aria-selected="false" data-alvo="progressao">Progressão</button>
+    <button role="tab" aria-selected="false" data-alvo="notas">Notas</button>
+  </nav>
+</header>
+
+<main>
+
+<section class="painel" id="pushA">
+  <div class="cabeca">
+    <h2>Push A, ênfase peito</h2>
+    <p>Peito, ombro e tríceps. 19 séries. Comece com 5 min de bike e 2 séries de aproximação no supino.</p>
+  </div>
+  <div class="listagem">
+
+    <article class="opcao" tabindex="0" data-dia="pushA" data-ex="pushA-1" data-series="4">
+      <div class="topo-opcao"><h3>1. Supino reto com barra</h3><span class="kcal">4 × 6-8</span><span class="marca"></span></div>
+      <ul class="itens">
+        <li><span class="nome">Descanso</span><span class="pontos"></span><span class="qtd">2 min</span></li>
+      </ul>
+      <p class="dica">Escápulas presas no banco, barra na linha do mamilo, cotovelos a 45 graus do tronco.</p>
+      <div class="registro" onclick="event.stopPropagation()">
+        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pushA-1-carga" placeholder="kg"></label>
+        <label>Reps <input type="text" inputmode="numeric" data-campo="pushA-1-reps" placeholder="ex 8/8/7"></label>
+      </div>
+    </article>
+
+    <article class="opcao" tabindex="0" data-dia="pushA" data-ex="pushA-2" data-series="3">
+      <div class="topo-opcao"><h3>2. Supino inclinado com halteres</h3><span class="kcal">3 × 8-10</span><span class="marca"></span></div>
+      <ul class="itens">
+        <li><span class="nome">Descanso</span><span class="pontos"></span><span class="qtd">90 s</span></li>
+      </ul>
+      <p class="dica">Banco entre 30 e 45 graus. Acima disso o ombro rouba o trabalho do peito.</p>
+      <div class="registro" onclick="event.stopPropagation()">
+        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pushA-2-carga" placeholder="kg"></label>
+        <label>Reps <input type="text" inputmode="numeric" data-campo="pushA-2-reps" placeholder="ex 8/8/7"></label>
+      </div>
+    </article>
+
+    <article class="opcao" tabindex="0" data-dia="pushA" data-ex="pushA-3" data-series="3">
+      <div class="topo-opcao"><h3>3. Peck deck ou crossover</h3><span class="kcal">3 × 12-15</span><span class="marca"></span></div>
+      <ul class="itens">
+        <li><span class="nome">Descanso</span><span class="pontos"></span><span class="qtd">60 s</span></li>
+      </ul>
+      <p class="dica">Junte as mãos à frente do peito e segure meio segundo no fim.</p>
+      <div class="registro" onclick="event.stopPropagation()">
+        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pushA-3-carga" placeholder="kg"></label>
+        <label>Reps <input type="text" inputmode="numeric" data-campo="pushA-3-reps" placeholder="ex 8/8/7"></label>
+      </div>
+    </article>
+
+    <article class="opcao" tabindex="0" data-dia="pushA" data-ex="pushA-4" data-series="3">
+      <div class="topo-opcao"><h3>4. Desenvolvimento na máquina</h3><span class="kcal">3 × 8-10</span><span class="marca"></span></div>
+      <ul class="itens">
+        <li><span class="nome">Descanso</span><span class="pontos"></span><span class="qtd">90 s</span></li>
+      </ul>
+      <p class="dica">Não trave o cotovelo no topo.</p>
+      <div class="registro" onclick="event.stopPropagation()">
+        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pushA-4-carga" placeholder="kg"></label>
+        <label>Reps <input type="text" inputmode="numeric" data-campo="pushA-4-reps" placeholder="ex 8/8/7"></label>
+      </div>
+    </article>
+
+    <article class="opcao" tabindex="0" data-dia="pushA" data-ex="pushA-5" data-series="3">
+      <div class="topo-opcao"><h3>5. Elevação lateral</h3><span class="kcal">3 × 12-15</span><span class="marca"></span></div>
+      <ul class="itens">
+        <li><span class="nome">Descanso</span><span class="pontos"></span><span class="qtd">45 s</span></li>
+      </ul>
+      <p class="dica">Peso leve, subida até a linha do ombro. É o exercício que mais gente arruína com carga demais.</p>
+      <div class="registro" onclick="event.stopPropagation()">
+        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pushA-5-carga" placeholder="kg"></label>
+        <label>Reps <input type="text" inputmode="numeric" data-campo="pushA-5-reps" placeholder="ex 8/8/7"></label>
+      </div>
+    </article>
+
+    <article class="opcao" tabindex="0" data-dia="pushA" data-ex="pushA-6" data-series="3">
+      <div class="topo-opcao"><h3>6. Tríceps na polia, barra reta</h3><span class="kcal">3 × 10-12</span><span class="marca"></span></div>
+      <ul class="itens">
+        <li><span class="nome">Descanso</span><span class="pontos"></span><span class="qtd">60 s</span></li>
+      </ul>
+      <p class="dica">Cotovelo colado ao tronco, só o antebraço se move.</p>
+      <div class="registro" onclick="event.stopPropagation()">
+        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pushA-6-carga" placeholder="kg"></label>
+        <label>Reps <input type="text" inputmode="numeric" data-campo="pushA-6-reps" placeholder="ex 8/8/7"></label>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<section class="painel" id="pullA" hidden>
+  <div class="cabeca">
+    <h2>Pull A, ênfase largura</h2>
+    <p>Costas e bíceps. 20 séries. Puxe com o cotovelo, não com a mão.</p>
+  </div>
+  <div class="listagem">
+
+    <article class="opcao" tabindex="0" data-dia="pullA" data-ex="pullA-1" data-series="4">
+      <div class="topo-opcao"><h3>1. Barra fixa ou puxador frente</h3><span class="kcal">4 × 6-10</span><span class="marca"></span></div>
+      <ul class="itens">
+        <li><span class="nome">Descanso</span><span class="pontos"></span><span class="qtd">2 min</span></li>
+      </ul>
+      <p class="dica">Pegada pronada aberta. Se a barra livre ainda não sai, use o puxador até fechar 8 repetições limpas.</p>
+      <div class="registro" onclick="event.stopPropagation()">
+        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pullA-1-carga" placeholder="kg"></label>
+        <label>Reps <input type="text" inputmode="numeric" data-campo="pullA-1-reps" placeholder="ex 8/8/7"></label>
+      </div>
+    </article>
+
+    <article class="opcao" tabindex="0" data-dia="pullA" data-ex="pullA-2" data-series="4">
+      <div class="topo-opcao"><h3>2. Remada curvada com barra</h3><span class="kcal">4 × 8-10</span><span class="marca"></span></div>
+      <ul class="itens">
+        <li><span class="nome">Descanso</span><span class="pontos"></span><span class="qtd">2 min</span></li>
+      </ul>
+      <p class="dica">Tronco a uns 45 graus, sem balanço de quadril, barra na direção do umbigo.</p>
+      <div class="registro" onclick="event.stopPropagation()">
+        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pullA-2-carga" placeholder="kg"></label>
+        <label>Reps <input type="text" inputmode="numeric" data-campo="pullA-2-reps" placeholder="ex 8/8/7"></label>
+      </div>
+    </article>
+
+    <article class="opcao" tabindex="0" data-dia="pullA" data-ex="pullA-3" data-series="3">
+      <div class="topo-opcao"><h3>3. Pullover na polia alta</h3><span class="kcal">3 × 12-15</span><span class="marca"></span></div>
+      <ul class="itens">
+        <li><span class="nome">Descanso</span><span class="pontos"></span><span class="qtd">60 s</span></li>
+      </ul>
+      <p class="dica">Cotovelo semiflexo e fixo. Movimento vem do ombro, não do cotovelo.</p>
+      <div class="registro" onclick="event.stopPropagation()">
+        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pullA-3-carga" placeholder="kg"></label>
+        <label>Reps <input type="text" inputmode="numeric" data-campo="pullA-3-reps" placeholder="ex 8/8/7"></label>
+      </div>
+    </article>
+
+    <article class="opcao" tabindex="0" data-dia="pullA" data-ex="pullA-4" data-series="3">
+      <div class="topo-opcao"><h3>4. Crucifixo inverso na máquina</h3><span class="kcal">3 × 15</span><span class="marca"></span></div>
+      <ul class="itens">
+        <li><span class="nome">Descanso</span><span class="pontos"></span><span class="qtd">45 s</span></li>
+      </ul>
+      <p class="dica">Posterior de ombro. Carga leve, foco em abrir sem encolher o pescoço.</p>
+      <div class="registro" onclick="event.stopPropagation()">
+        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pullA-4-carga" placeholder="kg"></label>
+        <label>Reps <input type="text" inputmode="numeric" data-campo="pullA-4-reps" placeholder="ex 8/8/7"></label>
+      </div>
+    </article>
+
+    <article class="opcao" tabindex="0" data-dia="pullA" data-ex="pullA-5" data-series="3">
+      <div class="topo-opcao"><h3>5. Rosca direta com barra W</h3><span class="kcal">3 × 8-10</span><span class="marca"></span></div>
+      <ul class="itens">
+        <li><span class="nome">Descanso</span><span class="pontos"></span><span class="qtd">90 s</span></li>
+      </ul>
+      <p class="dica">Cotovelo parado ao lado do corpo, sem impulso de lombar.</p>
+      <div class="registro" onclick="event.stopPropagation()">
+        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pullA-5-carga" placeholder="kg"></label>
+        <label>Reps <input type="text" inputmode="numeric" data-campo="pullA-5-reps" placeholder="ex 8/8/7"></label>
+      </div>
+    </article>
+
+    <article class="opcao" tabindex="0" data-dia="pullA" data-ex="pullA-6" data-series="3">
+      <div class="topo-opcao"><h3>6. Rosca martelo</h3><span class="kcal">3 × 10-12</span><span class="marca"></span></div>
+      <ul class="itens">
+        <li><span class="nome">Descanso</span><span class="pontos"></span><span class="qtd">60 s</span></li>
+      </ul>
+      <p class="dica">Pegada neutra, trabalha braquial e antebraço.</p>
+      <div class="registro" onclick="event.stopPropagation()">
+        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pullA-6-carga" placeholder="kg"></label>
+        <label>Reps <input type="text" inputmode="numeric" data-campo="pullA-6-reps" placeholder="ex 8/8/7"></label>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<section class="painel" id="perna" hidden>
+  <div class="cabeca">
+    <h2>Perna, sessão completa</h2>
+    <p>Única sessão de perna da semana. 20 séries. Não corte exercício por cansaço.</p>
+  </div>
+  <div class="listagem">
+
+    <article class="opcao" tabindex="0" data-dia="perna" data-ex="perna-1" data-series="4">
+      <div class="topo-opcao"><h3>1. Agachamento livre ou no Smith</h3><span class="kcal">4 × 6-8</span><span class="marca"></span></div>
+      <ul class="itens">
+        <li><span class="nome">Descanso</span><span class="pontos"></span><span class="qtd">2-3 min</span></li>
+      </ul>
+      <p class="dica">Desça até a coxa passar da paralela, se a mobilidade permitir. Joelho na direção do pé.</p>
+      <div class="registro" onclick="event.stopPropagation()">
+        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="perna-1-carga" placeholder="kg"></label>
+        <label>Reps <input type="text" inputmode="numeric" data-campo="perna-1-reps" placeholder="ex 8/8/7"></label>
+      </div>
+    </article>
+
+    <article class="opcao" tabindex="0" data-dia="perna" data-ex="perna-2" data-series="3">
+      <div class="topo-opcao"><h3>2. Levantamento terra romeno</h3><span class="kcal">3 × 8-10</span><span class="marca"></span></div>
+      <ul class="itens">
+        <li><span class="nome">Descanso</span><span class="pontos"></span><span class="qtd">2 min</span></li>
+      </ul>
+      <p class="dica">Joelho semiflexo e fixo, quadril para trás, barra raspando a coxa. Pare quando o posterior esticar, sem arredondar a lombar.</p>
+      <div class="registro" onclick="event.stopPropagation()">
+        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="perna-2-carga" placeholder="kg"></label>
+        <label>Reps <input type="text" inputmode="numeric" data-campo="perna-2-reps" placeholder="ex 8/8/7"></label>
+      </div>
+    </article>
+
+    <article class="opcao" tabindex="0" data-dia="perna" data-ex="perna-3" data-series="3">
+      <div class="topo-opcao"><h3>3. Leg press 45</h3><span class="kcal">3 × 10-12</span><span class="marca"></span></div>
+      <ul class="itens">
+        <li><span class="nome">Descanso</span><span class="pontos"></span><span class="qtd">2 min</span></li>
+      </ul>
+      <p class="dica">Não trave o joelho no topo nem deixe o quadril sair do banco embaixo.</p>
+      <div class="registro" onclick="event.stopPropagation()">
+        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="perna-3-carga" placeholder="kg"></label>
+        <label>Reps <input type="text" inputmode="numeric" data-campo="perna-3-reps" placeholder="ex 8/8/7"></label>
+      </div>
+    </article>
+
+    <article class="opcao" tabindex="0" data-dia="perna" data-ex="perna-4" data-series="3">
+      <div class="topo-opcao"><h3>4. Mesa flexora</h3><span class="kcal">3 × 10-12</span><span class="marca"></span></div>
+      <ul class="itens">
+        <li><span class="nome">Descanso</span><span class="pontos"></span><span class="qtd">90 s</span></li>
+      </ul>
+      <p class="dica">Quadril colado no apoio, subida rápida e descida em 3 segundos.</p>
+      <div class="registro" onclick="event.stopPropagation()">
+        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="perna-4-carga" placeholder="kg"></label>
+        <label>Reps <input type="text" inputmode="numeric" data-campo="perna-4-reps" placeholder="ex 8/8/7"></label>
+      </div>
+    </article>
+
+    <article class="opcao" tabindex="0" data-dia="perna" data-ex="perna-5" data-series="3">
+      <div class="topo-opcao"><h3>5. Cadeira extensora</h3><span class="kcal">3 × 12-15</span><span class="marca"></span></div>
+      <ul class="itens">
+        <li><span class="nome">Descanso</span><span class="pontos"></span><span class="qtd">60 s</span></li>
+      </ul>
+      <p class="dica">Pode fazer em bi-set com a mesa flexora se o tempo apertar.</p>
+      <div class="registro" onclick="event.stopPropagation()">
+        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="perna-5-carga" placeholder="kg"></label>
+        <label>Reps <input type="text" inputmode="numeric" data-campo="perna-5-reps" placeholder="ex 8/8/7"></label>
+      </div>
+    </article>
+
+    <article class="opcao" tabindex="0" data-dia="perna" data-ex="perna-6" data-series="4">
+      <div class="topo-opcao"><h3>6. Panturrilha em pé</h3><span class="kcal">4 × 12-15</span><span class="marca"></span></div>
+      <ul class="itens">
+        <li><span class="nome">Descanso</span><span class="pontos"></span><span class="qtd">45 s</span></li>
+      </ul>
+      <p class="dica">Amplitude total, 1 segundo esticado embaixo e 1 segundo contraído em cima.</p>
+      <div class="registro" onclick="event.stopPropagation()">
+        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="perna-6-carga" placeholder="kg"></label>
+        <label>Reps <input type="text" inputmode="numeric" data-campo="perna-6-reps" placeholder="ex 8/8/7"></label>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<section class="painel" id="pushB" hidden>
+  <div class="cabeca">
+    <h2>Push B, ênfase ombro</h2>
+    <p>Ombro, peito e tríceps. 20 séries. Sessão mais leve que o Push A, pare com 2 na reserva.</p>
+  </div>
+  <div class="listagem">
+
+    <article class="opcao" tabindex="0" data-dia="pushB" data-ex="pushB-1" data-series="4">
+      <div class="topo-opcao"><h3>1. Desenvolvimento com halteres</h3><span class="kcal">4 × 8-10</span><span class="marca"></span></div>
+      <ul class="itens">
+        <li><span class="nome">Descanso</span><span class="pontos"></span><span class="qtd">2 min</span></li>
+      </ul>
+      <p class="dica">Sentado com apoio nas costas. Halteres descem até a linha do queixo.</p>
+      <div class="registro" onclick="event.stopPropagation()">
+        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pushB-1-carga" placeholder="kg"></label>
+        <label>Reps <input type="text" inputmode="numeric" data-campo="pushB-1-reps" placeholder="ex 8/8/7"></label>
+      </div>
+    </article>
+
+    <article class="opcao" tabindex="0" data-dia="pushB" data-ex="pushB-2" data-series="3">
+      <div class="topo-opcao"><h3>2. Supino inclinado na máquina</h3><span class="kcal">3 × 8-12</span><span class="marca"></span></div>
+      <ul class="itens">
+        <li><span class="nome">Descanso</span><span class="pontos"></span><span class="qtd">90 s</span></li>
+      </ul>
+      <p class="dica">Sessão de volume, não de recorde. Fique com 2 repetições na reserva.</p>
+      <div class="registro" onclick="event.stopPropagation()">
+        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pushB-2-carga" placeholder="kg"></label>
+        <label>Reps <input type="text" inputmode="numeric" data-campo="pushB-2-reps" placeholder="ex 8/8/7"></label>
+      </div>
+    </article>
+
+    <article class="opcao" tabindex="0" data-dia="pushB" data-ex="pushB-3" data-series="4">
+      <div class="topo-opcao"><h3>3. Elevação lateral, drop na última</h3><span class="kcal">4 × 12-15</span><span class="marca"></span></div>
+      <ul class="itens">
+        <li><span class="nome">Descanso</span><span class="pontos"></span><span class="qtd">45 s</span></li>
+      </ul>
+      <p class="dica">Na última série, baixe o peso pela metade e faça mais repetições até falhar.</p>
+      <div class="registro" onclick="event.stopPropagation()">
+        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pushB-3-carga" placeholder="kg"></label>
+        <label>Reps <input type="text" inputmode="numeric" data-campo="pushB-3-reps" placeholder="ex 8/8/7"></label>
+      </div>
+    </article>
+
+    <article class="opcao" tabindex="0" data-dia="pushB" data-ex="pushB-4" data-series="3">
+      <div class="topo-opcao"><h3>4. Peck deck</h3><span class="kcal">3 × 12-15</span><span class="marca"></span></div>
+      <ul class="itens">
+        <li><span class="nome">Descanso</span><span class="pontos"></span><span class="qtd">60 s</span></li>
+      </ul>
+      <p class="dica">Segure a contração no fim de cada repetição.</p>
+      <div class="registro" onclick="event.stopPropagation()">
+        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pushB-4-carga" placeholder="kg"></label>
+        <label>Reps <input type="text" inputmode="numeric" data-campo="pushB-4-reps" placeholder="ex 8/8/7"></label>
+      </div>
+    </article>
+
+    <article class="opcao" tabindex="0" data-dia="pushB" data-ex="pushB-5" data-series="3">
+      <div class="topo-opcao"><h3>5. Paralelas ou mergulho no banco</h3><span class="kcal">3 × 8-12</span><span class="marca"></span></div>
+      <ul class="itens">
+        <li><span class="nome">Descanso</span><span class="pontos"></span><span class="qtd">90 s</span></li>
+      </ul>
+      <p class="dica">Tronco reto puxa mais tríceps, tronco inclinado puxa mais peito.</p>
+      <div class="registro" onclick="event.stopPropagation()">
+        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pushB-5-carga" placeholder="kg"></label>
+        <label>Reps <input type="text" inputmode="numeric" data-campo="pushB-5-reps" placeholder="ex 8/8/7"></label>
+      </div>
+    </article>
+
+    <article class="opcao" tabindex="0" data-dia="pushB" data-ex="pushB-6" data-series="3">
+      <div class="topo-opcao"><h3>6. Tríceps corda</h3><span class="kcal">3 × 12-15</span><span class="marca"></span></div>
+      <ul class="itens">
+        <li><span class="nome">Descanso</span><span class="pontos"></span><span class="qtd">60 s</span></li>
+      </ul>
+      <p class="dica">Abra a corda no fim do movimento.</p>
+      <div class="registro" onclick="event.stopPropagation()">
+        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pushB-6-carga" placeholder="kg"></label>
+        <label>Reps <input type="text" inputmode="numeric" data-campo="pushB-6-reps" placeholder="ex 8/8/7"></label>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<section class="painel" id="pullB" hidden>
+  <div class="cabeca">
+    <h2>Pull B, ênfase espessura</h2>
+    <p>Costas, braços e panturrilha. 22 séries. Sessão mais leve que o Pull A.</p>
+  </div>
+  <div class="listagem">
+
+    <article class="opcao" tabindex="0" data-dia="pullB" data-ex="pullB-1" data-series="4">
+      <div class="topo-opcao"><h3>1. Remada máquina ou serrote</h3><span class="kcal">4 × 8-10</span><span class="marca"></span></div>
+      <ul class="itens">
+        <li><span class="nome">Descanso</span><span class="pontos"></span><span class="qtd">2 min</span></li>
+      </ul>
+      <p class="dica">Puxe até o cotovelo passar da linha do tronco, sem girar a lombar.</p>
+      <div class="registro" onclick="event.stopPropagation()">
+        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pullB-1-carga" placeholder="kg"></label>
+        <label>Reps <input type="text" inputmode="numeric" data-campo="pullB-1-reps" placeholder="ex 8/8/7"></label>
+      </div>
+    </article>
+
+    <article class="opcao" tabindex="0" data-dia="pullB" data-ex="pullB-2" data-series="3">
+      <div class="topo-opcao"><h3>2. Puxador pegada neutra ou supinada</h3><span class="kcal">3 × 10-12</span><span class="marca"></span></div>
+      <ul class="itens">
+        <li><span class="nome">Descanso</span><span class="pontos"></span><span class="qtd">90 s</span></li>
+      </ul>
+      <p class="dica">Pegada fechada trabalha mais a parte baixa do dorsal.</p>
+      <div class="registro" onclick="event.stopPropagation()">
+        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pullB-2-carga" placeholder="kg"></label>
+        <label>Reps <input type="text" inputmode="numeric" data-campo="pullB-2-reps" placeholder="ex 8/8/7"></label>
+      </div>
+    </article>
+
+    <article class="opcao" tabindex="0" data-dia="pullB" data-ex="pullB-3" data-series="3">
+      <div class="topo-opcao"><h3>3. Remada baixa no cabo</h3><span class="kcal">3 × 10-12</span><span class="marca"></span></div>
+      <ul class="itens">
+        <li><span class="nome">Descanso</span><span class="pontos"></span><span class="qtd">90 s</span></li>
+      </ul>
+      <p class="dica">Tronco fixo. Se você balançar para puxar, o peso está alto demais.</p>
+      <div class="registro" onclick="event.stopPropagation()">
+        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pullB-3-carga" placeholder="kg"></label>
+        <label>Reps <input type="text" inputmode="numeric" data-campo="pullB-3-reps" placeholder="ex 8/8/7"></label>
+      </div>
+    </article>
+
+    <article class="opcao" tabindex="0" data-dia="pullB" data-ex="pullB-4" data-series="3">
+      <div class="topo-opcao"><h3>4. Encolhimento com halteres</h3><span class="kcal">3 × 12</span><span class="marca"></span></div>
+      <ul class="itens">
+        <li><span class="nome">Descanso</span><span class="pontos"></span><span class="qtd">60 s</span></li>
+      </ul>
+      <p class="dica">Sobe reto, sem rodar o ombro.</p>
+      <div class="registro" onclick="event.stopPropagation()">
+        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pullB-4-carga" placeholder="kg"></label>
+        <label>Reps <input type="text" inputmode="numeric" data-campo="pullB-4-reps" placeholder="ex 8/8/7"></label>
+      </div>
+    </article>
+
+    <article class="opcao" tabindex="0" data-dia="pullB" data-ex="pullB-5" data-series="3">
+      <div class="topo-opcao"><h3>5. Rosca scott ou rosca no cabo</h3><span class="kcal">3 × 10-12</span><span class="marca"></span></div>
+      <ul class="itens">
+        <li><span class="nome">Descanso</span><span class="pontos"></span><span class="qtd">60 s</span></li>
+      </ul>
+      <p class="dica">Braço apoiado elimina o impulso e isola o bíceps.</p>
+      <div class="registro" onclick="event.stopPropagation()">
+        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pullB-5-carga" placeholder="kg"></label>
+        <label>Reps <input type="text" inputmode="numeric" data-campo="pullB-5-reps" placeholder="ex 8/8/7"></label>
+      </div>
+    </article>
+
+    <article class="opcao" tabindex="0" data-dia="pullB" data-ex="pullB-6" data-series="3">
+      <div class="topo-opcao"><h3>6. Rosca inversa ou martelo cruzado</h3><span class="kcal">3 × 12</span><span class="marca"></span></div>
+      <ul class="itens">
+        <li><span class="nome">Descanso</span><span class="pontos"></span><span class="qtd">60 s</span></li>
+      </ul>
+      <p class="dica">Fecha o trabalho de antebraço.</p>
+      <div class="registro" onclick="event.stopPropagation()">
+        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pullB-6-carga" placeholder="kg"></label>
+        <label>Reps <input type="text" inputmode="numeric" data-campo="pullB-6-reps" placeholder="ex 8/8/7"></label>
+      </div>
+    </article>
+
+    <article class="opcao" tabindex="0" data-dia="pullB" data-ex="pullB-7" data-series="3">
+      <div class="topo-opcao"><h3>7. Panturrilha sentado</h3><span class="kcal">3 × 15-20</span><span class="marca"></span></div>
+      <ul class="itens">
+        <li><span class="nome">Descanso</span><span class="pontos"></span><span class="qtd">45 s</span></li>
+      </ul>
+      <p class="dica">Trabalha o sóleo, que a versão em pé não pega bem.</p>
+      <div class="registro" onclick="event.stopPropagation()">
+        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pullB-7-carga" placeholder="kg"></label>
+        <label>Reps <input type="text" inputmode="numeric" data-campo="pullB-7-reps" placeholder="ex 8/8/7"></label>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<section class="painel" id="progressao" hidden>
+  <div class="cabeca">
+    <h2>Progressão</h2>
+    <p>Como saber que carga usar e quando aumentar.</p>
+  </div>
+
+  <div class="aviso">
+    <b>Dupla progressão, o método.</b> Escolha uma carga que te leve ao limite inferior da faixa de repetições
+    com 1 ou 2 na reserva. Semana a semana, tente somar repetições com a mesma carga. Quando bater o limite
+    superior em todas as séries, aumente a carga e volte ao limite inferior.
+  </div>
+
+  <div class="aviso">
+    <b>Quanto aumentar.</b> 2 a 5 kg em exercício de perna. 1 a 2,5 kg em membro superior.
+    Em elevação lateral e crucifixo inverso, o menor incremento disponível.
+  </div>
+
+  <div class="aviso">
+    <b>RIR, repetições na reserva.</b> Trabalhe com 1 ou 2 na reserva: termine a série sabendo que daria mais
+    uma ou duas. Parar longe demais desperdiça a série. Ir à falha em tudo destrói a recuperação, ainda mais
+    em déficit calórico.
+  </div>
+
+  <div class="aviso">
+    <b>Alterne A e B.</b> Peito, costas, ombro e braços aparecem duas vezes na semana. A primeira sessão
+    é a pesada, a segunda fica com 2 na reserva. Nas duas no talo, a recuperação não fecha.
+  </div>
+
+  <div class="aviso">
+    <b>Semana leve.</b> A cada 6 a 8 semanas: mesmos exercícios, metade das séries, carga reduzida em 30%.
+    Não é semana perdida, é o que permite continuar subindo depois.
+  </div>
+
+  <div class="tabela">
+    <h3>Volume semanal</h3>
+    <table>
+      <tr><th>Grupo</th><th>Séries</th><th>Frequência</th></tr>
+      <tr><td>Costas</td><td>20</td><td>2x</td></tr>
+      <tr><td>Peito</td><td>13</td><td>2x</td></tr>
+      <tr><td>Bíceps</td><td>12</td><td>2x</td></tr>
+      <tr><td>Tríceps</td><td>12</td><td>2x</td></tr>
+      <tr><td>Ombro</td><td>10</td><td>2x</td></tr>
+      <tr><td>Quadríceps</td><td>10</td><td>1x</td></tr>
+      <tr><td>Posterior e glúteo</td><td>6</td><td>1x</td></tr>
+      <tr><td>Panturrilha</td><td>7</td><td>2x</td></tr>
+    </table>
+    <p class="legenda">Se a recuperação apertar, tire 1 série do terceiro exercício de cada dia de Pull antes de mexer no resto.</p>
+  </div>
+</section>
+
+<section class="painel" id="notas" hidden>
+  <div class="cabeca">
+    <h2>Notas</h2>
+    <p>Divisão, adaptações para a Smart Fit e o que medir.</p>
+  </div>
+
+  <div class="aviso">
+    <b>Ordem da semana.</b> Segunda Push A, terça Pull A, quarta Perna, quinta Push B, sexta Pull B.
+    Se precisar folgar no meio: segunda, terça, quinta, sexta e sábado, mantendo a mesma sequência.
+  </div>
+
+  <div class="aviso">
+    <b>O dia de perna é intocável.</b> Com uma única sessão de perna na semana, faltar na quarta significa
+    a semana inteira sem perna. Se um imprevisto derrubar o dia, remaneje para o sábado em vez de pular.
+  </div>
+
+  <div class="aviso">
+    <b>Halteres pesados acabam rápido.</b> Se o halter que você precisa sumiu, troque por máquina equivalente:
+    supino máquina no lugar do halter, remada máquina no lugar da curvada. Anote a troca no registro do exercício.
+  </div>
+
+  <div class="aviso">
+    <b>Rack livre é escasso.</b> O Smith serve bem para agachamento e desenvolvimento.
+    Para o terra romeno, prefira barra livre ou halteres.
+  </div>
+
+  <div class="aviso">
+    <b>Horário de pico.</b> Entre 18h e 20h, use bi-set com aparelhos vizinhos, como extensora com flexora
+    ou rosca com tríceps, para segurar os 60 minutos.
+  </div>
+
+  <div class="aviso">
+    <b>Cardio.</b> 2 sessões de 20 a 25 min de caminhada inclinada ou bike leve, de preferência longe do dia
+    de perna. Em déficit calórico, cardio pesado rouba recuperação do treino de força.
+  </div>
+
+  <div class="aviso">
+    <b>O que medir.</b> Fita métrica em cintura, abdômen e braço contraído, mais foto, a cada 4 semanas.
+    A balança em déficit com musculação oscila demais para servir de guia sozinha.
+    Agende também a próxima avaliação antropométrica para comparar a massa magra com novembro de 2025.
+  </div>
+
+  <div class="aviso">
+    <b>Como usar.</b> Toque no cartão do exercício para marcar como feito. Os campos de carga e repetições
+    ficam salvos no aparelho e servem de referência do último treino. As marcações do dia zeram na virada
+    da data, o registro de carga não.
+  </div>
+</section>
+
+</main>
+
+<div class="total">
+  <div class="faixa">
+    <div class="num"><span id="feitos">0</span> <small>de <span id="deTotal">6</span> exercícios</small></div>
+    <div class="rot" id="detalhe">Nenhum exercício marcado</div>
+    <div class="barra"><i id="progresso"></i></div>
+  </div>
+  <button id="limpar" type="button">Limpar</button>
+</div>
+
+<script>
+
+(function(){
+  var cartoes = Array.prototype.slice.call(document.querySelectorAll('.opcao'));
+  var abas = Array.prototype.slice.call(document.querySelectorAll('#abas button'));
+  var paineis = Array.prototype.slice.call(document.querySelectorAll('.painel'));
+  var campos = Array.prototype.slice.call(document.querySelectorAll('.registro input'));
+  var elFeitos = document.getElementById('feitos');
+  var elTotal = document.getElementById('deTotal');
+  var elDet = document.getElementById('detalhe');
+  var elProg = document.getElementById('progresso');
+  var ativo = 'pushA';
+
+  var memoria = {}, cargasMem = {};
+  var deposito = null;
+  try { deposito = window.localStorage; } catch(e) { deposito = null; }
+
+  function hoje(){
+    var d = new Date();
+    return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
+  }
+  function ler(){
+    try {
+      if(!deposito) return memoria;
+      var bruto = deposito.getItem('treino-feito');
+      if(!bruto) return {};
+      var dados = JSON.parse(bruto);
+      if(dados.dia !== hoje()) return {};
+      return dados.feitos || {};
+    } catch(e){ return memoria; }
+  }
+  function gravar(feitos){
+    memoria = feitos;
+    try { if(deposito) deposito.setItem('treino-feito', JSON.stringify({dia:hoje(), feitos:feitos})); } catch(e){}
+  }
+  function lerCargas(){
+    try {
+      if(!deposito) return cargasMem;
+      var bruto = deposito.getItem('treino-cargas');
+      return bruto ? JSON.parse(bruto) : {};
+    } catch(e){ return cargasMem; }
+  }
+  function gravarCargas(c){
+    cargasMem = c;
+    try { if(deposito) deposito.setItem('treino-cargas', JSON.stringify(c)); } catch(e){}
+  }
+
+  function atualizar(){
+    var doDia = cartoes.filter(function(c){ return c.dataset.dia === ativo; });
+    if(!doDia.length){
+      elFeitos.textContent = '0';
+      elTotal.textContent = '0';
+      elDet.textContent = 'Aba sem exercícios';
+      elProg.style.width = '0%';
+      return;
+    }
+    var feitos = doDia.filter(function(c){ return c.dataset.escolhida === '1'; });
+    var seriesFeitas = 0, seriesTotal = 0;
+    doDia.forEach(function(c){
+      var s = parseInt(c.dataset.series,10) || 0;
+      seriesTotal += s;
+      if(c.dataset.escolhida === '1') seriesFeitas += s;
+    });
+    elFeitos.textContent = feitos.length;
+    elTotal.textContent = doDia.length;
+    elProg.style.width = Math.round(feitos.length/doDia.length*100) + '%';
+    if(!feitos.length){
+      elDet.textContent = seriesTotal + ' séries no dia';
+    } else if(feitos.length === doDia.length){
+      elDet.textContent = 'treino concluído · ' + seriesFeitas + ' séries';
+    } else {
+      elDet.textContent = seriesFeitas + ' de ' + seriesTotal + ' séries feitas';
+    }
+  }
+
+  function alternar(c){
+    var feitos = ler();
+    var k = c.dataset.ex;
+    if(c.dataset.escolhida === '1'){ c.dataset.escolhida = '0'; delete feitos[k]; }
+    else { c.dataset.escolhida = '1'; feitos[k] = 1; }
+    gravar(feitos);
+    atualizar();
+  }
+
+  cartoes.forEach(function(c){
+    c.dataset.escolhida = '0';
+    c.addEventListener('click', function(){ alternar(c); });
+    c.addEventListener('keydown', function(e){
+      if(e.target.tagName === 'INPUT') return;
+      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); alternar(c); }
+    });
+  });
+
+  (function(){
+    var feitos = ler();
+    cartoes.forEach(function(c){ if(feitos[c.dataset.ex]) c.dataset.escolhida = '1'; });
+    var cargas = lerCargas();
+    campos.forEach(function(inp){
+      if(cargas[inp.dataset.campo] != null) inp.value = cargas[inp.dataset.campo];
+      inp.addEventListener('change', function(){
+        var c = lerCargas();
+        if(inp.value === '') delete c[inp.dataset.campo]; else c[inp.dataset.campo] = inp.value;
+        gravarCargas(c);
+      });
+    });
+    atualizar();
+  })();
+
+  document.getElementById('limpar').addEventListener('click', function(){
+    var feitos = ler();
+    cartoes.forEach(function(c){
+      if(c.dataset.dia === ativo){ c.dataset.escolhida = '0'; delete feitos[c.dataset.ex]; }
+    });
+    gravar(feitos);
+    atualizar();
+  });
+
+  abas.forEach(function(b){
+    b.addEventListener('click', function(){
+      abas.forEach(function(o){ o.setAttribute('aria-selected', o === b ? 'true' : 'false'); });
+      paineis.forEach(function(p){ p.hidden = (p.id !== b.dataset.alvo); });
+      ativo = b.dataset.alvo;
+      atualizar();
+      window.scrollTo(0,0);
+    });
+  });
+})();
+
+</script>
+
+</body>
+</html>
