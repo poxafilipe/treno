@@ -245,6 +245,38 @@
 
   .dica{margin:6px 0 0;font-size:13px;color:var(--soft);line-height:1.4}
 
+  .acao{
+    display:block;width:100%;appearance:none;
+    border:1px solid var(--mark);background:var(--mark);color:#f4f2ec;
+    font:inherit;font-size:15px;font-weight:600;
+    padding:13px;border-radius:11px;min-height:48px;cursor:pointer;
+    margin:4px 0 8px;
+  }
+  .acao.secundaria{background:#fff;color:var(--ink);border-color:var(--rule)}
+  .acao:active{opacity:.85}
+  .linha-acoes{display:flex;gap:8px}
+  .linha-acoes .acao{margin-top:0}
+
+  .sessao{
+    background:#fff;border:1px solid var(--line);border-radius:12px;
+    padding:12px 15px;margin-bottom:11px;
+  }
+  .sessao h3{font-size:15px;margin-bottom:2px}
+  .sessao .quando{font-size:12.5px;color:var(--soft);margin-bottom:8px}
+  .sessao table{font-size:13.5px}
+  .sessao td:first-child{width:52%}
+
+  .vazio{font-size:14px;color:var(--soft);padding:8px 0}
+
+  textarea{
+    width:100%;min-height:110px;font:inherit;font-size:13px;
+    padding:10px;border:1px solid var(--line);border-radius:10px;
+    background:#fff;color:var(--ink);resize:vertical;
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  textarea:focus{outline:2px solid var(--mark);outline-offset:1px}
+  .recado{font-size:13px;color:var(--mark);font-weight:600;min-height:18px;margin:6px 0 0}
+
 </style>
 </head>
 <body>
@@ -261,6 +293,7 @@
     <button role="tab" aria-selected="false" data-alvo="pushB">Push B</button>
     <button role="tab" aria-selected="false" data-alvo="pullB">Pull B</button>
     <button role="tab" aria-selected="false" data-alvo="progressao">Progressão</button>
+    <button role="tab" aria-selected="false" data-alvo="historico">Histórico</button>
     <button role="tab" aria-selected="false" data-alvo="notas">Notas</button>
   </nav>
 </header>
@@ -347,6 +380,8 @@
     </article>
 
   </div>
+  <button class="acao" type="button" data-salvar="pushA">Concluir e salvar no histórico</button>
+  <p class="recado" data-recado="pushA"></p>
 </section>
 
 <section class="painel" id="pullA" hidden>
@@ -429,6 +464,8 @@
     </article>
 
   </div>
+  <button class="acao" type="button" data-salvar="pullA">Concluir e salvar no histórico</button>
+  <p class="recado" data-recado="pullA"></p>
 </section>
 
 <section class="painel" id="perna" hidden>
@@ -511,6 +548,8 @@
     </article>
 
   </div>
+  <button class="acao" type="button" data-salvar="perna">Concluir e salvar no histórico</button>
+  <p class="recado" data-recado="perna"></p>
 </section>
 
 <section class="painel" id="pushB" hidden>
@@ -593,6 +632,8 @@
     </article>
 
   </div>
+  <button class="acao" type="button" data-salvar="pushB">Concluir e salvar no histórico</button>
+  <p class="recado" data-recado="pushB"></p>
 </section>
 
 <section class="painel" id="pullB" hidden>
@@ -687,6 +728,8 @@
     </article>
 
   </div>
+  <button class="acao" type="button" data-salvar="pullB">Concluir e salvar no histórico</button>
+  <p class="recado" data-recado="pullB"></p>
 </section>
 
 <section class="painel" id="progressao" hidden>
@@ -739,6 +782,32 @@
   </div>
 </section>
 
+<section class="painel" id="historico" hidden>
+  <div class="cabeca">
+    <h2>Histórico</h2>
+    <p>Cada treino salvo vira um registro com data, carga e repetições.</p>
+  </div>
+
+  <div class="linha-acoes">
+    <button class="acao secundaria" type="button" id="baixar">Baixar arquivo</button>
+    <button class="acao secundaria" type="button" id="copiar">Copiar tudo</button>
+  </div>
+  <p class="recado" id="recado-exp"></p>
+
+  <div id="lista-sessoes"></div>
+
+  <div class="tabela">
+    <h3>Restaurar de um arquivo</h3>
+    <p class="legenda">Cole aqui o conteúdo de um arquivo exportado. Os treinos são somados aos que já existem, sem apagar nada nem duplicar.</p>
+    <textarea id="entrada" placeholder="Cole o JSON exportado"></textarea>
+    <div class="linha-acoes" style="margin-top:8px">
+      <button class="acao secundaria" type="button" id="importar">Importar</button>
+      <button class="acao secundaria" type="button" id="apagar">Apagar histórico</button>
+    </div>
+    <p class="recado" id="recado-imp"></p>
+  </div>
+</section>
+
 <section class="painel" id="notas" hidden>
   <div class="cabeca">
     <h2>Notas</h2>
@@ -783,8 +852,21 @@
 
   <div class="aviso">
     <b>Como usar.</b> Toque no cartão do exercício para marcar como feito. Os campos de carga e repetições
-    ficam salvos no aparelho e servem de referência do último treino. As marcações do dia zeram na virada
-    da data, o registro de carga não.
+    já vêm preenchidos com o que você usou da última vez naquele mesmo exercício. Ao terminar, use
+    Concluir e salvar no histórico. As marcações do dia zeram na virada da data, o histórico não.
+  </div>
+
+  <div class="aviso">
+    <b>Onde os dados ficam.</b> Tudo é gravado no armazenamento do próprio navegador, neste aparelho.
+    O GitHub Pages só entrega a página, ele não guarda nada. Se você limpar os dados do site, trocar de
+    celular ou reinstalar o navegador, o histórico se perde. Exporte de vez em quando.
+  </div>
+
+  <div class="aviso">
+    <b>Como fazer backup.</b> Na aba Histórico, use Baixar arquivo para gerar um .json com tudo.
+    Guarde onde quiser, inclusive commitando no mesmo repositório, numa pasta como /dados.
+    Cada commit vira uma versão datada, então você ganha histórico versionado de graça.
+    Para restaurar num aparelho novo, cole o conteúdo do arquivo no campo de importação.
   </div>
 </section>
 
@@ -805,22 +887,33 @@
   var cartoes = Array.prototype.slice.call(document.querySelectorAll('.opcao'));
   var abas = Array.prototype.slice.call(document.querySelectorAll('#abas button'));
   var paineis = Array.prototype.slice.call(document.querySelectorAll('.painel'));
-  var campos = Array.prototype.slice.call(document.querySelectorAll('.registro input'));
   var elFeitos = document.getElementById('feitos');
   var elTotal = document.getElementById('deTotal');
   var elDet = document.getElementById('detalhe');
   var elProg = document.getElementById('progresso');
   var ativo = 'pushA';
 
-  var memoria = {}, cargasMem = {};
+  var ROTULOS = {};
+  abas.forEach(function(b){ ROTULOS[b.dataset.alvo] = b.textContent.trim(); });
+
+  var memoria = {}, histMem = {app:'treino', v:1, sessoes:[]};
   var deposito = null;
   try { deposito = window.localStorage; } catch(e) { deposito = null; }
 
+  function pad(n){ return (n<10?'0':'')+n; }
   function hoje(){
     var d = new Date();
-    return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
+    return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
   }
-  function ler(){
+  function porExtenso(iso){
+    var p = iso.split('-');
+    var d = new Date(+p[0], +p[1]-1, +p[2]);
+    var dias = ['domingo','segunda','terça','quarta','quinta','sexta','sábado'];
+    return p[2]+'/'+p[1]+'/'+p[0]+', '+dias[d.getDay()];
+  }
+
+  /* ---------- marcacoes do dia ---------- */
+  function lerFeitos(){
     try {
       if(!deposito) return memoria;
       var bruto = deposito.getItem('treino-feito');
@@ -830,56 +923,144 @@
       return dados.feitos || {};
     } catch(e){ return memoria; }
   }
-  function gravar(feitos){
+  function gravarFeitos(feitos){
     memoria = feitos;
     try { if(deposito) deposito.setItem('treino-feito', JSON.stringify({dia:hoje(), feitos:feitos})); } catch(e){}
   }
-  function lerCargas(){
+
+  /* ---------- historico ---------- */
+  function lerHist(){
     try {
-      if(!deposito) return cargasMem;
-      var bruto = deposito.getItem('treino-cargas');
-      return bruto ? JSON.parse(bruto) : {};
-    } catch(e){ return cargasMem; }
+      if(!deposito) return histMem;
+      var bruto = deposito.getItem('treino-historico');
+      if(!bruto) return {app:'treino', v:1, sessoes:[]};
+      var d = JSON.parse(bruto);
+      if(!d || !d.sessoes) return {app:'treino', v:1, sessoes:[]};
+      return d;
+    } catch(e){ return histMem; }
   }
-  function gravarCargas(c){
-    cargasMem = c;
-    try { if(deposito) deposito.setItem('treino-cargas', JSON.stringify(c)); } catch(e){}
+  function gravarHist(h){
+    histMem = h;
+    try { if(deposito) deposito.setItem('treino-historico', JSON.stringify(h)); } catch(e){}
   }
 
+  /* ultimo valor registrado de cada exercicio */
+  function ultimos(){
+    var mapa = {};
+    var ss = lerHist().sessoes.slice().sort(function(a,b){ return a.data < b.data ? -1 : 1; });
+    ss.forEach(function(s){
+      (s.itens||[]).forEach(function(it){
+        if(it.chave) mapa[it.chave] = it;
+      });
+    });
+    return mapa;
+  }
+
+  function campo(pid, i, tipo){
+    return document.querySelector('[data-campo="'+pid+'-'+i+'-'+tipo+'"]');
+  }
+
+  function preencher(){
+    var u = ultimos();
+    cartoes.forEach(function(c){
+      var ch = c.dataset.ex;
+      if(!u[ch]) return;
+      var ca = c.querySelector('[data-campo$="-carga"]');
+      var re = c.querySelector('[data-campo$="-reps"]');
+      if(ca && !ca.value && u[ch].carga) ca.value = u[ch].carga;
+      if(re && !re.value && u[ch].reps) re.value = u[ch].reps;
+    });
+  }
+
+  function salvarSessao(pid){
+    var itens = [];
+    cartoes.filter(function(c){ return c.dataset.dia === pid; }).forEach(function(c){
+      var ca = c.querySelector('[data-campo$="-carga"]');
+      var re = c.querySelector('[data-campo$="-reps"]');
+      itens.push({
+        chave: c.dataset.ex,
+        nome: c.querySelector('h3').textContent.trim(),
+        prescricao: c.querySelector('.kcal').textContent.trim(),
+        series: parseInt(c.dataset.series,10) || 0,
+        carga: ca ? ca.value.trim() : '',
+        reps: re ? re.value.trim() : '',
+        feito: c.dataset.escolhida === '1'
+      });
+    });
+    var h = lerHist();
+    var id = hoje()+'|'+pid;
+    h.sessoes = h.sessoes.filter(function(s){ return s.id !== id; });
+    h.sessoes.push({ id:id, data:hoje(), dia:pid, rotulo:ROTULOS[pid]||pid, itens:itens });
+    h.sessoes.sort(function(a,b){ return a.id < b.id ? 1 : -1; });
+    gravarHist(h);
+    render();
+    var r = document.querySelector('[data-recado="'+pid+'"]');
+    if(r){
+      var n = itens.filter(function(x){ return x.feito; }).length;
+      r.textContent = 'Salvo. ' + n + ' de ' + itens.length + ' exercícios registrados em ' + porExtenso(hoje()) + '.';
+      setTimeout(function(){ r.textContent=''; }, 6000);
+    }
+  }
+
+  function render(){
+    var alvo = document.getElementById('lista-sessoes');
+    if(!alvo) return;
+    var h = lerHist();
+    if(!h.sessoes.length){
+      alvo.innerHTML = '<p class="vazio">Nenhum treino salvo ainda. Termine uma sessão e use o botão no fim da aba do dia.</p>';
+      return;
+    }
+    var html = '';
+    h.sessoes.forEach(function(s){
+      var linhas = '';
+      (s.itens||[]).forEach(function(it){
+        if(!it.feito && !it.carga && !it.reps) return;
+        linhas += '<tr><td>'+it.nome+'</td><td>'+(it.carga?it.carga+' kg':'—')+'</td><td>'+(it.reps||'—')+'</td></tr>';
+      });
+      if(!linhas) linhas = '<tr><td colspan="3">Sem registro de carga</td></tr>';
+      html += '<div class="sessao"><h3>'+s.rotulo+'</h3><div class="quando">'+porExtenso(s.data)+'</div>'
+            + '<table><tr><th>Exercício</th><th>Carga</th><th>Reps</th></tr>'+linhas+'</table></div>';
+    });
+    alvo.innerHTML = html;
+  }
+
+  function recado(id, txt){
+    var e = document.getElementById(id);
+    if(!e) return;
+    e.textContent = txt;
+    setTimeout(function(){ e.textContent=''; }, 6000);
+  }
+
+  /* ---------- contador da barra ---------- */
   function atualizar(){
     var doDia = cartoes.filter(function(c){ return c.dataset.dia === ativo; });
     if(!doDia.length){
-      elFeitos.textContent = '0';
-      elTotal.textContent = '0';
+      elFeitos.textContent = '0'; elTotal.textContent = '0';
       elDet.textContent = 'Aba sem exercícios';
       elProg.style.width = '0%';
       return;
     }
     var feitos = doDia.filter(function(c){ return c.dataset.escolhida === '1'; });
-    var seriesFeitas = 0, seriesTotal = 0;
+    var sf = 0, st = 0;
     doDia.forEach(function(c){
-      var s = parseInt(c.dataset.series,10) || 0;
-      seriesTotal += s;
-      if(c.dataset.escolhida === '1') seriesFeitas += s;
+      var n = parseInt(c.dataset.series,10) || 0;
+      st += n;
+      if(c.dataset.escolhida === '1') sf += n;
     });
     elFeitos.textContent = feitos.length;
     elTotal.textContent = doDia.length;
     elProg.style.width = Math.round(feitos.length/doDia.length*100) + '%';
-    if(!feitos.length){
-      elDet.textContent = seriesTotal + ' séries no dia';
-    } else if(feitos.length === doDia.length){
-      elDet.textContent = 'treino concluído · ' + seriesFeitas + ' séries';
-    } else {
-      elDet.textContent = seriesFeitas + ' de ' + seriesTotal + ' séries feitas';
-    }
+    if(!feitos.length) elDet.textContent = st + ' séries no dia';
+    else if(feitos.length === doDia.length) elDet.textContent = 'treino concluído · ' + sf + ' séries';
+    else elDet.textContent = sf + ' de ' + st + ' séries feitas';
   }
 
   function alternar(c){
-    var feitos = ler();
+    var feitos = lerFeitos();
     var k = c.dataset.ex;
     if(c.dataset.escolhida === '1'){ c.dataset.escolhida = '0'; delete feitos[k]; }
     else { c.dataset.escolhida = '1'; feitos[k] = 1; }
-    gravar(feitos);
+    gravarFeitos(feitos);
     atualizar();
   }
 
@@ -892,28 +1073,82 @@
     });
   });
 
-  (function(){
-    var feitos = ler();
-    cartoes.forEach(function(c){ if(feitos[c.dataset.ex]) c.dataset.escolhida = '1'; });
-    var cargas = lerCargas();
-    campos.forEach(function(inp){
-      if(cargas[inp.dataset.campo] != null) inp.value = cargas[inp.dataset.campo];
-      inp.addEventListener('change', function(){
-        var c = lerCargas();
-        if(inp.value === '') delete c[inp.dataset.campo]; else c[inp.dataset.campo] = inp.value;
-        gravarCargas(c);
-      });
-    });
-    atualizar();
-  })();
+  /* ---------- botoes ---------- */
+  Array.prototype.slice.call(document.querySelectorAll('[data-salvar]')).forEach(function(b){
+    b.addEventListener('click', function(){ salvarSessao(b.dataset.salvar); });
+  });
 
   document.getElementById('limpar').addEventListener('click', function(){
-    var feitos = ler();
+    var feitos = lerFeitos();
     cartoes.forEach(function(c){
       if(c.dataset.dia === ativo){ c.dataset.escolhida = '0'; delete feitos[c.dataset.ex]; }
     });
-    gravar(feitos);
+    gravarFeitos(feitos);
     atualizar();
+  });
+
+  var elBaixar = document.getElementById('baixar');
+  if(elBaixar) elBaixar.addEventListener('click', function(){
+    var h = lerHist();
+    if(!h.sessoes.length){ recado('recado-exp','Nada para exportar ainda.'); return; }
+    var txt = JSON.stringify(h, null, 2);
+    try {
+      var blob = new Blob([txt], {type:'application/json'});
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'treino-' + hoje() + '.json';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function(){ URL.revokeObjectURL(a.href); }, 2000);
+      recado('recado-exp', h.sessoes.length + ' treinos exportados.');
+    } catch(e){ recado('recado-exp','Não deu para baixar aqui. Use Copiar tudo.'); }
+  });
+
+  var elCopiar = document.getElementById('copiar');
+  if(elCopiar) elCopiar.addEventListener('click', function(){
+    var h = lerHist();
+    if(!h.sessoes.length){ recado('recado-exp','Nada para copiar ainda.'); return; }
+    var txt = JSON.stringify(h);
+    function fallback(){
+      var t = document.getElementById('entrada');
+      t.value = txt; t.focus(); t.select();
+      recado('recado-exp','Copie o texto que apareceu no campo abaixo.');
+    }
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(function(){
+        recado('recado-exp', h.sessoes.length + ' treinos copiados.');
+      }, fallback);
+    } else fallback();
+  });
+
+  var elImp = document.getElementById('importar');
+  if(elImp) elImp.addEventListener('click', function(){
+    var t = document.getElementById('entrada');
+    var bruto = (t.value || '').trim();
+    if(!bruto){ recado('recado-imp','Cole o conteúdo do arquivo primeiro.'); return; }
+    var d;
+    try { d = JSON.parse(bruto); } catch(e){ recado('recado-imp','Isso não é um JSON válido.'); return; }
+    if(!d || !Array.isArray(d.sessoes)){ recado('recado-imp','Arquivo sem lista de sessões.'); return; }
+    var h = lerHist();
+    var vistos = {};
+    h.sessoes.forEach(function(s){ vistos[s.id] = 1; });
+    var novos = 0;
+    d.sessoes.forEach(function(s){
+      if(!s || !s.id || vistos[s.id]) return;
+      h.sessoes.push(s); vistos[s.id] = 1; novos++;
+    });
+    h.sessoes.sort(function(a,b){ return a.id < b.id ? 1 : -1; });
+    gravarHist(h);
+    render(); preencher();
+    t.value = '';
+    recado('recado-imp', novos + ' treinos novos importados.');
+  });
+
+  var elApagar = document.getElementById('apagar');
+  if(elApagar) elApagar.addEventListener('click', function(){
+    if(!confirm('Apagar todo o histórico deste aparelho? Isso não tem volta.')) return;
+    gravarHist({app:'treino', v:1, sessoes:[]});
+    render();
+    recado('recado-imp','Histórico apagado.');
   });
 
   abas.forEach(function(b){
@@ -925,6 +1160,15 @@
       window.scrollTo(0,0);
     });
   });
+
+  /* ---------- inicio ---------- */
+  (function(){
+    var feitos = lerFeitos();
+    cartoes.forEach(function(c){ if(feitos[c.dataset.ex]) c.dataset.escolhida = '1'; });
+    preencher();
+    render();
+    atualizar();
+  })();
 })();
 
 </script>
