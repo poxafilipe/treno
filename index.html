@@ -147,11 +147,40 @@
     background:var(--superficie);color:var(--tinta);
     font-variant-numeric:tabular-nums;
   }
-  .registro label:first-child input{width:82px;font-size:19px;text-align:center;letter-spacing:-0.02em}
-  .registro label:last-child input{width:118px;font-size:15px}
+  .registro .carga input{width:82px;font-size:19px;text-align:center;letter-spacing:-0.02em}
   .registro input::placeholder{font-weight:500;color:var(--regua);font-size:13px}
   .registro input:focus{outline:0;border-color:var(--marinho);box-shadow:0 0 0 2px rgba(27,58,99,.18)}
   .opcao[data-escolhida="1"] .registro input{border-color:rgba(255,255,255,.35)}
+
+  /* reps por serie e anotacao */
+  .registro{flex-direction:column;align-items:stretch;gap:9px}
+  .linha-reg{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap}
+  .series-reps{min-width:0}
+  .registro .rot{
+    display:block;font-size:11.5px;color:var(--apagado);
+    font-weight:600;margin-bottom:3px;
+  }
+  .opcao[data-escolhida="1"] .registro .rot{color:rgba(238,241,245,.7)}
+  .caixas{display:flex;gap:5px}
+  .caixas label{align-items:center;gap:2px}
+  .caixas i{
+    font-style:normal;font-size:10px;font-weight:700;
+    color:var(--regua);font-variant-numeric:tabular-nums;
+  }
+  .opcao[data-escolhida="1"] .caixas i{color:rgba(238,241,245,.55)}
+  .caixas input{width:44px;min-height:44px;font-size:17px;text-align:center;padding:7px 2px}
+  .registro .obs{width:100%}
+  .registro .obs input{width:100%;font-weight:500;font-size:14px;min-height:44px}
+  .ultima{
+    margin:0;font-size:12px;line-height:1.35;
+    color:var(--regua);font-variant-numeric:tabular-nums;
+  }
+  .opcao[data-escolhida="1"] .ultima{color:rgba(238,241,245,.6)}
+  .ultima:empty{display:none}
+  .sessao .nota-linha td{
+    font-size:12.5px;color:var(--apagado);
+    padding-top:0;border-top:0;font-style:italic;
+  }
 
   /* ---------- avisos e tabelas ---------- */
   .aviso{
@@ -303,8 +332,20 @@
       </ul>
       <p class="dica">Escápulas presas no banco, barra na linha do mamilo, cotovelos a 45 graus do tronco.</p>
       <div class="registro" onclick="event.stopPropagation()">
-        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pushA-1-carga" placeholder="kg"></label>
-        <label>Reps <input type="text" inputmode="numeric" data-campo="pushA-1-reps" placeholder="ex 8/8/7"></label>
+        <div class="linha-reg">
+          <label class="carga">Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pushA-1-carga" placeholder="kg"></label>
+          <div class="series-reps">
+            <span class="rot">Reps por série</span>
+            <div class="caixas">
+            <label><i>1</i><input type="text" inputmode="numeric" maxlength="3" data-rep="1" data-campo="pushA-1-rep1" aria-label="repetições da série 1"></label>
+            <label><i>2</i><input type="text" inputmode="numeric" maxlength="3" data-rep="2" data-campo="pushA-1-rep2" aria-label="repetições da série 2"></label>
+            <label><i>3</i><input type="text" inputmode="numeric" maxlength="3" data-rep="3" data-campo="pushA-1-rep3" aria-label="repetições da série 3"></label>
+            <label><i>4</i><input type="text" inputmode="numeric" maxlength="3" data-rep="4" data-campo="pushA-1-rep4" aria-label="repetições da série 4"></label>
+            </div>
+          </div>
+        </div>
+        <label class="obs">Anotação de hoje <input type="text" data-campo="pushA-1-obs" placeholder="ex sobrou 2 reps na última"></label>
+        <p class="ultima" data-ultima="pushA-1"></p>
       </div>
     </article>
 
@@ -315,8 +356,19 @@
       </ul>
       <p class="dica">Banco entre 30 e 45 graus. Acima disso o ombro rouba o trabalho do peito.</p>
       <div class="registro" onclick="event.stopPropagation()">
-        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pushA-2-carga" placeholder="kg"></label>
-        <label>Reps <input type="text" inputmode="numeric" data-campo="pushA-2-reps" placeholder="ex 8/8/7"></label>
+        <div class="linha-reg">
+          <label class="carga">Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pushA-2-carga" placeholder="kg"></label>
+          <div class="series-reps">
+            <span class="rot">Reps por série</span>
+            <div class="caixas">
+            <label><i>1</i><input type="text" inputmode="numeric" maxlength="3" data-rep="1" data-campo="pushA-2-rep1" aria-label="repetições da série 1"></label>
+            <label><i>2</i><input type="text" inputmode="numeric" maxlength="3" data-rep="2" data-campo="pushA-2-rep2" aria-label="repetições da série 2"></label>
+            <label><i>3</i><input type="text" inputmode="numeric" maxlength="3" data-rep="3" data-campo="pushA-2-rep3" aria-label="repetições da série 3"></label>
+            </div>
+          </div>
+        </div>
+        <label class="obs">Anotação de hoje <input type="text" data-campo="pushA-2-obs" placeholder="ex sobrou 2 reps na última"></label>
+        <p class="ultima" data-ultima="pushA-2"></p>
       </div>
     </article>
 
@@ -327,8 +379,19 @@
       </ul>
       <p class="dica">Junte as mãos à frente do peito e segure meio segundo no fim.</p>
       <div class="registro" onclick="event.stopPropagation()">
-        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pushA-3-carga" placeholder="kg"></label>
-        <label>Reps <input type="text" inputmode="numeric" data-campo="pushA-3-reps" placeholder="ex 8/8/7"></label>
+        <div class="linha-reg">
+          <label class="carga">Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pushA-3-carga" placeholder="kg"></label>
+          <div class="series-reps">
+            <span class="rot">Reps por série</span>
+            <div class="caixas">
+            <label><i>1</i><input type="text" inputmode="numeric" maxlength="3" data-rep="1" data-campo="pushA-3-rep1" aria-label="repetições da série 1"></label>
+            <label><i>2</i><input type="text" inputmode="numeric" maxlength="3" data-rep="2" data-campo="pushA-3-rep2" aria-label="repetições da série 2"></label>
+            <label><i>3</i><input type="text" inputmode="numeric" maxlength="3" data-rep="3" data-campo="pushA-3-rep3" aria-label="repetições da série 3"></label>
+            </div>
+          </div>
+        </div>
+        <label class="obs">Anotação de hoje <input type="text" data-campo="pushA-3-obs" placeholder="ex sobrou 2 reps na última"></label>
+        <p class="ultima" data-ultima="pushA-3"></p>
       </div>
     </article>
 
@@ -339,8 +402,19 @@
       </ul>
       <p class="dica">Não trave o cotovelo no topo.</p>
       <div class="registro" onclick="event.stopPropagation()">
-        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pushA-4-carga" placeholder="kg"></label>
-        <label>Reps <input type="text" inputmode="numeric" data-campo="pushA-4-reps" placeholder="ex 8/8/7"></label>
+        <div class="linha-reg">
+          <label class="carga">Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pushA-4-carga" placeholder="kg"></label>
+          <div class="series-reps">
+            <span class="rot">Reps por série</span>
+            <div class="caixas">
+            <label><i>1</i><input type="text" inputmode="numeric" maxlength="3" data-rep="1" data-campo="pushA-4-rep1" aria-label="repetições da série 1"></label>
+            <label><i>2</i><input type="text" inputmode="numeric" maxlength="3" data-rep="2" data-campo="pushA-4-rep2" aria-label="repetições da série 2"></label>
+            <label><i>3</i><input type="text" inputmode="numeric" maxlength="3" data-rep="3" data-campo="pushA-4-rep3" aria-label="repetições da série 3"></label>
+            </div>
+          </div>
+        </div>
+        <label class="obs">Anotação de hoje <input type="text" data-campo="pushA-4-obs" placeholder="ex sobrou 2 reps na última"></label>
+        <p class="ultima" data-ultima="pushA-4"></p>
       </div>
     </article>
 
@@ -351,8 +425,19 @@
       </ul>
       <p class="dica">Peso leve, subida até a linha do ombro. É o exercício que mais gente arruína com carga demais.</p>
       <div class="registro" onclick="event.stopPropagation()">
-        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pushA-5-carga" placeholder="kg"></label>
-        <label>Reps <input type="text" inputmode="numeric" data-campo="pushA-5-reps" placeholder="ex 8/8/7"></label>
+        <div class="linha-reg">
+          <label class="carga">Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pushA-5-carga" placeholder="kg"></label>
+          <div class="series-reps">
+            <span class="rot">Reps por série</span>
+            <div class="caixas">
+            <label><i>1</i><input type="text" inputmode="numeric" maxlength="3" data-rep="1" data-campo="pushA-5-rep1" aria-label="repetições da série 1"></label>
+            <label><i>2</i><input type="text" inputmode="numeric" maxlength="3" data-rep="2" data-campo="pushA-5-rep2" aria-label="repetições da série 2"></label>
+            <label><i>3</i><input type="text" inputmode="numeric" maxlength="3" data-rep="3" data-campo="pushA-5-rep3" aria-label="repetições da série 3"></label>
+            </div>
+          </div>
+        </div>
+        <label class="obs">Anotação de hoje <input type="text" data-campo="pushA-5-obs" placeholder="ex sobrou 2 reps na última"></label>
+        <p class="ultima" data-ultima="pushA-5"></p>
       </div>
     </article>
 
@@ -363,8 +448,19 @@
       </ul>
       <p class="dica">Cotovelo colado ao tronco, só o antebraço se move.</p>
       <div class="registro" onclick="event.stopPropagation()">
-        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pushA-6-carga" placeholder="kg"></label>
-        <label>Reps <input type="text" inputmode="numeric" data-campo="pushA-6-reps" placeholder="ex 8/8/7"></label>
+        <div class="linha-reg">
+          <label class="carga">Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pushA-6-carga" placeholder="kg"></label>
+          <div class="series-reps">
+            <span class="rot">Reps por série</span>
+            <div class="caixas">
+            <label><i>1</i><input type="text" inputmode="numeric" maxlength="3" data-rep="1" data-campo="pushA-6-rep1" aria-label="repetições da série 1"></label>
+            <label><i>2</i><input type="text" inputmode="numeric" maxlength="3" data-rep="2" data-campo="pushA-6-rep2" aria-label="repetições da série 2"></label>
+            <label><i>3</i><input type="text" inputmode="numeric" maxlength="3" data-rep="3" data-campo="pushA-6-rep3" aria-label="repetições da série 3"></label>
+            </div>
+          </div>
+        </div>
+        <label class="obs">Anotação de hoje <input type="text" data-campo="pushA-6-obs" placeholder="ex sobrou 2 reps na última"></label>
+        <p class="ultima" data-ultima="pushA-6"></p>
       </div>
     </article>
 
@@ -387,8 +483,20 @@
       </ul>
       <p class="dica">Pegada pronada aberta. Se a barra livre ainda não sai, use o puxador até fechar 8 repetições limpas.</p>
       <div class="registro" onclick="event.stopPropagation()">
-        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pullA-1-carga" placeholder="kg"></label>
-        <label>Reps <input type="text" inputmode="numeric" data-campo="pullA-1-reps" placeholder="ex 8/8/7"></label>
+        <div class="linha-reg">
+          <label class="carga">Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pullA-1-carga" placeholder="kg"></label>
+          <div class="series-reps">
+            <span class="rot">Reps por série</span>
+            <div class="caixas">
+            <label><i>1</i><input type="text" inputmode="numeric" maxlength="3" data-rep="1" data-campo="pullA-1-rep1" aria-label="repetições da série 1"></label>
+            <label><i>2</i><input type="text" inputmode="numeric" maxlength="3" data-rep="2" data-campo="pullA-1-rep2" aria-label="repetições da série 2"></label>
+            <label><i>3</i><input type="text" inputmode="numeric" maxlength="3" data-rep="3" data-campo="pullA-1-rep3" aria-label="repetições da série 3"></label>
+            <label><i>4</i><input type="text" inputmode="numeric" maxlength="3" data-rep="4" data-campo="pullA-1-rep4" aria-label="repetições da série 4"></label>
+            </div>
+          </div>
+        </div>
+        <label class="obs">Anotação de hoje <input type="text" data-campo="pullA-1-obs" placeholder="ex sobrou 2 reps na última"></label>
+        <p class="ultima" data-ultima="pullA-1"></p>
       </div>
     </article>
 
@@ -399,8 +507,20 @@
       </ul>
       <p class="dica">Tronco a uns 45 graus, sem balanço de quadril, barra na direção do umbigo.</p>
       <div class="registro" onclick="event.stopPropagation()">
-        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pullA-2-carga" placeholder="kg"></label>
-        <label>Reps <input type="text" inputmode="numeric" data-campo="pullA-2-reps" placeholder="ex 8/8/7"></label>
+        <div class="linha-reg">
+          <label class="carga">Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pullA-2-carga" placeholder="kg"></label>
+          <div class="series-reps">
+            <span class="rot">Reps por série</span>
+            <div class="caixas">
+            <label><i>1</i><input type="text" inputmode="numeric" maxlength="3" data-rep="1" data-campo="pullA-2-rep1" aria-label="repetições da série 1"></label>
+            <label><i>2</i><input type="text" inputmode="numeric" maxlength="3" data-rep="2" data-campo="pullA-2-rep2" aria-label="repetições da série 2"></label>
+            <label><i>3</i><input type="text" inputmode="numeric" maxlength="3" data-rep="3" data-campo="pullA-2-rep3" aria-label="repetições da série 3"></label>
+            <label><i>4</i><input type="text" inputmode="numeric" maxlength="3" data-rep="4" data-campo="pullA-2-rep4" aria-label="repetições da série 4"></label>
+            </div>
+          </div>
+        </div>
+        <label class="obs">Anotação de hoje <input type="text" data-campo="pullA-2-obs" placeholder="ex sobrou 2 reps na última"></label>
+        <p class="ultima" data-ultima="pullA-2"></p>
       </div>
     </article>
 
@@ -411,8 +531,19 @@
       </ul>
       <p class="dica">Cotovelo semiflexo e fixo. Movimento vem do ombro, não do cotovelo.</p>
       <div class="registro" onclick="event.stopPropagation()">
-        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pullA-3-carga" placeholder="kg"></label>
-        <label>Reps <input type="text" inputmode="numeric" data-campo="pullA-3-reps" placeholder="ex 8/8/7"></label>
+        <div class="linha-reg">
+          <label class="carga">Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pullA-3-carga" placeholder="kg"></label>
+          <div class="series-reps">
+            <span class="rot">Reps por série</span>
+            <div class="caixas">
+            <label><i>1</i><input type="text" inputmode="numeric" maxlength="3" data-rep="1" data-campo="pullA-3-rep1" aria-label="repetições da série 1"></label>
+            <label><i>2</i><input type="text" inputmode="numeric" maxlength="3" data-rep="2" data-campo="pullA-3-rep2" aria-label="repetições da série 2"></label>
+            <label><i>3</i><input type="text" inputmode="numeric" maxlength="3" data-rep="3" data-campo="pullA-3-rep3" aria-label="repetições da série 3"></label>
+            </div>
+          </div>
+        </div>
+        <label class="obs">Anotação de hoje <input type="text" data-campo="pullA-3-obs" placeholder="ex sobrou 2 reps na última"></label>
+        <p class="ultima" data-ultima="pullA-3"></p>
       </div>
     </article>
 
@@ -423,8 +554,19 @@
       </ul>
       <p class="dica">Posterior de ombro. Carga leve, foco em abrir sem encolher o pescoço.</p>
       <div class="registro" onclick="event.stopPropagation()">
-        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pullA-4-carga" placeholder="kg"></label>
-        <label>Reps <input type="text" inputmode="numeric" data-campo="pullA-4-reps" placeholder="ex 8/8/7"></label>
+        <div class="linha-reg">
+          <label class="carga">Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pullA-4-carga" placeholder="kg"></label>
+          <div class="series-reps">
+            <span class="rot">Reps por série</span>
+            <div class="caixas">
+            <label><i>1</i><input type="text" inputmode="numeric" maxlength="3" data-rep="1" data-campo="pullA-4-rep1" aria-label="repetições da série 1"></label>
+            <label><i>2</i><input type="text" inputmode="numeric" maxlength="3" data-rep="2" data-campo="pullA-4-rep2" aria-label="repetições da série 2"></label>
+            <label><i>3</i><input type="text" inputmode="numeric" maxlength="3" data-rep="3" data-campo="pullA-4-rep3" aria-label="repetições da série 3"></label>
+            </div>
+          </div>
+        </div>
+        <label class="obs">Anotação de hoje <input type="text" data-campo="pullA-4-obs" placeholder="ex sobrou 2 reps na última"></label>
+        <p class="ultima" data-ultima="pullA-4"></p>
       </div>
     </article>
 
@@ -435,8 +577,19 @@
       </ul>
       <p class="dica">Cotovelo parado ao lado do corpo, sem impulso de lombar.</p>
       <div class="registro" onclick="event.stopPropagation()">
-        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pullA-5-carga" placeholder="kg"></label>
-        <label>Reps <input type="text" inputmode="numeric" data-campo="pullA-5-reps" placeholder="ex 8/8/7"></label>
+        <div class="linha-reg">
+          <label class="carga">Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pullA-5-carga" placeholder="kg"></label>
+          <div class="series-reps">
+            <span class="rot">Reps por série</span>
+            <div class="caixas">
+            <label><i>1</i><input type="text" inputmode="numeric" maxlength="3" data-rep="1" data-campo="pullA-5-rep1" aria-label="repetições da série 1"></label>
+            <label><i>2</i><input type="text" inputmode="numeric" maxlength="3" data-rep="2" data-campo="pullA-5-rep2" aria-label="repetições da série 2"></label>
+            <label><i>3</i><input type="text" inputmode="numeric" maxlength="3" data-rep="3" data-campo="pullA-5-rep3" aria-label="repetições da série 3"></label>
+            </div>
+          </div>
+        </div>
+        <label class="obs">Anotação de hoje <input type="text" data-campo="pullA-5-obs" placeholder="ex sobrou 2 reps na última"></label>
+        <p class="ultima" data-ultima="pullA-5"></p>
       </div>
     </article>
 
@@ -447,8 +600,19 @@
       </ul>
       <p class="dica">Pegada neutra, trabalha braquial e antebraço.</p>
       <div class="registro" onclick="event.stopPropagation()">
-        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pullA-6-carga" placeholder="kg"></label>
-        <label>Reps <input type="text" inputmode="numeric" data-campo="pullA-6-reps" placeholder="ex 8/8/7"></label>
+        <div class="linha-reg">
+          <label class="carga">Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pullA-6-carga" placeholder="kg"></label>
+          <div class="series-reps">
+            <span class="rot">Reps por série</span>
+            <div class="caixas">
+            <label><i>1</i><input type="text" inputmode="numeric" maxlength="3" data-rep="1" data-campo="pullA-6-rep1" aria-label="repetições da série 1"></label>
+            <label><i>2</i><input type="text" inputmode="numeric" maxlength="3" data-rep="2" data-campo="pullA-6-rep2" aria-label="repetições da série 2"></label>
+            <label><i>3</i><input type="text" inputmode="numeric" maxlength="3" data-rep="3" data-campo="pullA-6-rep3" aria-label="repetições da série 3"></label>
+            </div>
+          </div>
+        </div>
+        <label class="obs">Anotação de hoje <input type="text" data-campo="pullA-6-obs" placeholder="ex sobrou 2 reps na última"></label>
+        <p class="ultima" data-ultima="pullA-6"></p>
       </div>
     </article>
 
@@ -471,8 +635,20 @@
       </ul>
       <p class="dica">Desça até a coxa passar da paralela, se a mobilidade permitir. Joelho na direção do pé.</p>
       <div class="registro" onclick="event.stopPropagation()">
-        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="perna-1-carga" placeholder="kg"></label>
-        <label>Reps <input type="text" inputmode="numeric" data-campo="perna-1-reps" placeholder="ex 8/8/7"></label>
+        <div class="linha-reg">
+          <label class="carga">Carga <input type="number" inputmode="decimal" step="0.5" data-campo="perna-1-carga" placeholder="kg"></label>
+          <div class="series-reps">
+            <span class="rot">Reps por série</span>
+            <div class="caixas">
+            <label><i>1</i><input type="text" inputmode="numeric" maxlength="3" data-rep="1" data-campo="perna-1-rep1" aria-label="repetições da série 1"></label>
+            <label><i>2</i><input type="text" inputmode="numeric" maxlength="3" data-rep="2" data-campo="perna-1-rep2" aria-label="repetições da série 2"></label>
+            <label><i>3</i><input type="text" inputmode="numeric" maxlength="3" data-rep="3" data-campo="perna-1-rep3" aria-label="repetições da série 3"></label>
+            <label><i>4</i><input type="text" inputmode="numeric" maxlength="3" data-rep="4" data-campo="perna-1-rep4" aria-label="repetições da série 4"></label>
+            </div>
+          </div>
+        </div>
+        <label class="obs">Anotação de hoje <input type="text" data-campo="perna-1-obs" placeholder="ex sobrou 2 reps na última"></label>
+        <p class="ultima" data-ultima="perna-1"></p>
       </div>
     </article>
 
@@ -483,8 +659,19 @@
       </ul>
       <p class="dica">Joelho semiflexo e fixo, quadril para trás, barra raspando a coxa. Pare quando o posterior esticar, sem arredondar a lombar.</p>
       <div class="registro" onclick="event.stopPropagation()">
-        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="perna-2-carga" placeholder="kg"></label>
-        <label>Reps <input type="text" inputmode="numeric" data-campo="perna-2-reps" placeholder="ex 8/8/7"></label>
+        <div class="linha-reg">
+          <label class="carga">Carga <input type="number" inputmode="decimal" step="0.5" data-campo="perna-2-carga" placeholder="kg"></label>
+          <div class="series-reps">
+            <span class="rot">Reps por série</span>
+            <div class="caixas">
+            <label><i>1</i><input type="text" inputmode="numeric" maxlength="3" data-rep="1" data-campo="perna-2-rep1" aria-label="repetições da série 1"></label>
+            <label><i>2</i><input type="text" inputmode="numeric" maxlength="3" data-rep="2" data-campo="perna-2-rep2" aria-label="repetições da série 2"></label>
+            <label><i>3</i><input type="text" inputmode="numeric" maxlength="3" data-rep="3" data-campo="perna-2-rep3" aria-label="repetições da série 3"></label>
+            </div>
+          </div>
+        </div>
+        <label class="obs">Anotação de hoje <input type="text" data-campo="perna-2-obs" placeholder="ex sobrou 2 reps na última"></label>
+        <p class="ultima" data-ultima="perna-2"></p>
       </div>
     </article>
 
@@ -495,8 +682,19 @@
       </ul>
       <p class="dica">Não trave o joelho no topo nem deixe o quadril sair do banco embaixo.</p>
       <div class="registro" onclick="event.stopPropagation()">
-        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="perna-3-carga" placeholder="kg"></label>
-        <label>Reps <input type="text" inputmode="numeric" data-campo="perna-3-reps" placeholder="ex 8/8/7"></label>
+        <div class="linha-reg">
+          <label class="carga">Carga <input type="number" inputmode="decimal" step="0.5" data-campo="perna-3-carga" placeholder="kg"></label>
+          <div class="series-reps">
+            <span class="rot">Reps por série</span>
+            <div class="caixas">
+            <label><i>1</i><input type="text" inputmode="numeric" maxlength="3" data-rep="1" data-campo="perna-3-rep1" aria-label="repetições da série 1"></label>
+            <label><i>2</i><input type="text" inputmode="numeric" maxlength="3" data-rep="2" data-campo="perna-3-rep2" aria-label="repetições da série 2"></label>
+            <label><i>3</i><input type="text" inputmode="numeric" maxlength="3" data-rep="3" data-campo="perna-3-rep3" aria-label="repetições da série 3"></label>
+            </div>
+          </div>
+        </div>
+        <label class="obs">Anotação de hoje <input type="text" data-campo="perna-3-obs" placeholder="ex sobrou 2 reps na última"></label>
+        <p class="ultima" data-ultima="perna-3"></p>
       </div>
     </article>
 
@@ -507,8 +705,19 @@
       </ul>
       <p class="dica">Quadril colado no apoio, subida rápida e descida em 3 segundos.</p>
       <div class="registro" onclick="event.stopPropagation()">
-        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="perna-4-carga" placeholder="kg"></label>
-        <label>Reps <input type="text" inputmode="numeric" data-campo="perna-4-reps" placeholder="ex 8/8/7"></label>
+        <div class="linha-reg">
+          <label class="carga">Carga <input type="number" inputmode="decimal" step="0.5" data-campo="perna-4-carga" placeholder="kg"></label>
+          <div class="series-reps">
+            <span class="rot">Reps por série</span>
+            <div class="caixas">
+            <label><i>1</i><input type="text" inputmode="numeric" maxlength="3" data-rep="1" data-campo="perna-4-rep1" aria-label="repetições da série 1"></label>
+            <label><i>2</i><input type="text" inputmode="numeric" maxlength="3" data-rep="2" data-campo="perna-4-rep2" aria-label="repetições da série 2"></label>
+            <label><i>3</i><input type="text" inputmode="numeric" maxlength="3" data-rep="3" data-campo="perna-4-rep3" aria-label="repetições da série 3"></label>
+            </div>
+          </div>
+        </div>
+        <label class="obs">Anotação de hoje <input type="text" data-campo="perna-4-obs" placeholder="ex sobrou 2 reps na última"></label>
+        <p class="ultima" data-ultima="perna-4"></p>
       </div>
     </article>
 
@@ -519,8 +728,19 @@
       </ul>
       <p class="dica">Pode fazer em bi-set com a mesa flexora se o tempo apertar.</p>
       <div class="registro" onclick="event.stopPropagation()">
-        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="perna-5-carga" placeholder="kg"></label>
-        <label>Reps <input type="text" inputmode="numeric" data-campo="perna-5-reps" placeholder="ex 8/8/7"></label>
+        <div class="linha-reg">
+          <label class="carga">Carga <input type="number" inputmode="decimal" step="0.5" data-campo="perna-5-carga" placeholder="kg"></label>
+          <div class="series-reps">
+            <span class="rot">Reps por série</span>
+            <div class="caixas">
+            <label><i>1</i><input type="text" inputmode="numeric" maxlength="3" data-rep="1" data-campo="perna-5-rep1" aria-label="repetições da série 1"></label>
+            <label><i>2</i><input type="text" inputmode="numeric" maxlength="3" data-rep="2" data-campo="perna-5-rep2" aria-label="repetições da série 2"></label>
+            <label><i>3</i><input type="text" inputmode="numeric" maxlength="3" data-rep="3" data-campo="perna-5-rep3" aria-label="repetições da série 3"></label>
+            </div>
+          </div>
+        </div>
+        <label class="obs">Anotação de hoje <input type="text" data-campo="perna-5-obs" placeholder="ex sobrou 2 reps na última"></label>
+        <p class="ultima" data-ultima="perna-5"></p>
       </div>
     </article>
 
@@ -531,8 +751,20 @@
       </ul>
       <p class="dica">Amplitude total, 1 segundo esticado embaixo e 1 segundo contraído em cima.</p>
       <div class="registro" onclick="event.stopPropagation()">
-        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="perna-6-carga" placeholder="kg"></label>
-        <label>Reps <input type="text" inputmode="numeric" data-campo="perna-6-reps" placeholder="ex 8/8/7"></label>
+        <div class="linha-reg">
+          <label class="carga">Carga <input type="number" inputmode="decimal" step="0.5" data-campo="perna-6-carga" placeholder="kg"></label>
+          <div class="series-reps">
+            <span class="rot">Reps por série</span>
+            <div class="caixas">
+            <label><i>1</i><input type="text" inputmode="numeric" maxlength="3" data-rep="1" data-campo="perna-6-rep1" aria-label="repetições da série 1"></label>
+            <label><i>2</i><input type="text" inputmode="numeric" maxlength="3" data-rep="2" data-campo="perna-6-rep2" aria-label="repetições da série 2"></label>
+            <label><i>3</i><input type="text" inputmode="numeric" maxlength="3" data-rep="3" data-campo="perna-6-rep3" aria-label="repetições da série 3"></label>
+            <label><i>4</i><input type="text" inputmode="numeric" maxlength="3" data-rep="4" data-campo="perna-6-rep4" aria-label="repetições da série 4"></label>
+            </div>
+          </div>
+        </div>
+        <label class="obs">Anotação de hoje <input type="text" data-campo="perna-6-obs" placeholder="ex sobrou 2 reps na última"></label>
+        <p class="ultima" data-ultima="perna-6"></p>
       </div>
     </article>
 
@@ -555,8 +787,20 @@
       </ul>
       <p class="dica">Sentado com apoio nas costas. Halteres descem até a linha do queixo.</p>
       <div class="registro" onclick="event.stopPropagation()">
-        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pushB-1-carga" placeholder="kg"></label>
-        <label>Reps <input type="text" inputmode="numeric" data-campo="pushB-1-reps" placeholder="ex 8/8/7"></label>
+        <div class="linha-reg">
+          <label class="carga">Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pushB-1-carga" placeholder="kg"></label>
+          <div class="series-reps">
+            <span class="rot">Reps por série</span>
+            <div class="caixas">
+            <label><i>1</i><input type="text" inputmode="numeric" maxlength="3" data-rep="1" data-campo="pushB-1-rep1" aria-label="repetições da série 1"></label>
+            <label><i>2</i><input type="text" inputmode="numeric" maxlength="3" data-rep="2" data-campo="pushB-1-rep2" aria-label="repetições da série 2"></label>
+            <label><i>3</i><input type="text" inputmode="numeric" maxlength="3" data-rep="3" data-campo="pushB-1-rep3" aria-label="repetições da série 3"></label>
+            <label><i>4</i><input type="text" inputmode="numeric" maxlength="3" data-rep="4" data-campo="pushB-1-rep4" aria-label="repetições da série 4"></label>
+            </div>
+          </div>
+        </div>
+        <label class="obs">Anotação de hoje <input type="text" data-campo="pushB-1-obs" placeholder="ex sobrou 2 reps na última"></label>
+        <p class="ultima" data-ultima="pushB-1"></p>
       </div>
     </article>
 
@@ -567,8 +811,19 @@
       </ul>
       <p class="dica">Sessão de volume, não de recorde. Fique com 2 repetições na reserva.</p>
       <div class="registro" onclick="event.stopPropagation()">
-        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pushB-2-carga" placeholder="kg"></label>
-        <label>Reps <input type="text" inputmode="numeric" data-campo="pushB-2-reps" placeholder="ex 8/8/7"></label>
+        <div class="linha-reg">
+          <label class="carga">Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pushB-2-carga" placeholder="kg"></label>
+          <div class="series-reps">
+            <span class="rot">Reps por série</span>
+            <div class="caixas">
+            <label><i>1</i><input type="text" inputmode="numeric" maxlength="3" data-rep="1" data-campo="pushB-2-rep1" aria-label="repetições da série 1"></label>
+            <label><i>2</i><input type="text" inputmode="numeric" maxlength="3" data-rep="2" data-campo="pushB-2-rep2" aria-label="repetições da série 2"></label>
+            <label><i>3</i><input type="text" inputmode="numeric" maxlength="3" data-rep="3" data-campo="pushB-2-rep3" aria-label="repetições da série 3"></label>
+            </div>
+          </div>
+        </div>
+        <label class="obs">Anotação de hoje <input type="text" data-campo="pushB-2-obs" placeholder="ex sobrou 2 reps na última"></label>
+        <p class="ultima" data-ultima="pushB-2"></p>
       </div>
     </article>
 
@@ -579,8 +834,20 @@
       </ul>
       <p class="dica">Na última série, baixe o peso pela metade e faça mais repetições até falhar.</p>
       <div class="registro" onclick="event.stopPropagation()">
-        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pushB-3-carga" placeholder="kg"></label>
-        <label>Reps <input type="text" inputmode="numeric" data-campo="pushB-3-reps" placeholder="ex 8/8/7"></label>
+        <div class="linha-reg">
+          <label class="carga">Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pushB-3-carga" placeholder="kg"></label>
+          <div class="series-reps">
+            <span class="rot">Reps por série</span>
+            <div class="caixas">
+            <label><i>1</i><input type="text" inputmode="numeric" maxlength="3" data-rep="1" data-campo="pushB-3-rep1" aria-label="repetições da série 1"></label>
+            <label><i>2</i><input type="text" inputmode="numeric" maxlength="3" data-rep="2" data-campo="pushB-3-rep2" aria-label="repetições da série 2"></label>
+            <label><i>3</i><input type="text" inputmode="numeric" maxlength="3" data-rep="3" data-campo="pushB-3-rep3" aria-label="repetições da série 3"></label>
+            <label><i>4</i><input type="text" inputmode="numeric" maxlength="3" data-rep="4" data-campo="pushB-3-rep4" aria-label="repetições da série 4"></label>
+            </div>
+          </div>
+        </div>
+        <label class="obs">Anotação de hoje <input type="text" data-campo="pushB-3-obs" placeholder="ex sobrou 2 reps na última"></label>
+        <p class="ultima" data-ultima="pushB-3"></p>
       </div>
     </article>
 
@@ -591,8 +858,19 @@
       </ul>
       <p class="dica">Segure a contração no fim de cada repetição.</p>
       <div class="registro" onclick="event.stopPropagation()">
-        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pushB-4-carga" placeholder="kg"></label>
-        <label>Reps <input type="text" inputmode="numeric" data-campo="pushB-4-reps" placeholder="ex 8/8/7"></label>
+        <div class="linha-reg">
+          <label class="carga">Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pushB-4-carga" placeholder="kg"></label>
+          <div class="series-reps">
+            <span class="rot">Reps por série</span>
+            <div class="caixas">
+            <label><i>1</i><input type="text" inputmode="numeric" maxlength="3" data-rep="1" data-campo="pushB-4-rep1" aria-label="repetições da série 1"></label>
+            <label><i>2</i><input type="text" inputmode="numeric" maxlength="3" data-rep="2" data-campo="pushB-4-rep2" aria-label="repetições da série 2"></label>
+            <label><i>3</i><input type="text" inputmode="numeric" maxlength="3" data-rep="3" data-campo="pushB-4-rep3" aria-label="repetições da série 3"></label>
+            </div>
+          </div>
+        </div>
+        <label class="obs">Anotação de hoje <input type="text" data-campo="pushB-4-obs" placeholder="ex sobrou 2 reps na última"></label>
+        <p class="ultima" data-ultima="pushB-4"></p>
       </div>
     </article>
 
@@ -603,8 +881,19 @@
       </ul>
       <p class="dica">Tronco reto puxa mais tríceps, tronco inclinado puxa mais peito.</p>
       <div class="registro" onclick="event.stopPropagation()">
-        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pushB-5-carga" placeholder="kg"></label>
-        <label>Reps <input type="text" inputmode="numeric" data-campo="pushB-5-reps" placeholder="ex 8/8/7"></label>
+        <div class="linha-reg">
+          <label class="carga">Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pushB-5-carga" placeholder="kg"></label>
+          <div class="series-reps">
+            <span class="rot">Reps por série</span>
+            <div class="caixas">
+            <label><i>1</i><input type="text" inputmode="numeric" maxlength="3" data-rep="1" data-campo="pushB-5-rep1" aria-label="repetições da série 1"></label>
+            <label><i>2</i><input type="text" inputmode="numeric" maxlength="3" data-rep="2" data-campo="pushB-5-rep2" aria-label="repetições da série 2"></label>
+            <label><i>3</i><input type="text" inputmode="numeric" maxlength="3" data-rep="3" data-campo="pushB-5-rep3" aria-label="repetições da série 3"></label>
+            </div>
+          </div>
+        </div>
+        <label class="obs">Anotação de hoje <input type="text" data-campo="pushB-5-obs" placeholder="ex sobrou 2 reps na última"></label>
+        <p class="ultima" data-ultima="pushB-5"></p>
       </div>
     </article>
 
@@ -615,8 +904,19 @@
       </ul>
       <p class="dica">Abra a corda no fim do movimento.</p>
       <div class="registro" onclick="event.stopPropagation()">
-        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pushB-6-carga" placeholder="kg"></label>
-        <label>Reps <input type="text" inputmode="numeric" data-campo="pushB-6-reps" placeholder="ex 8/8/7"></label>
+        <div class="linha-reg">
+          <label class="carga">Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pushB-6-carga" placeholder="kg"></label>
+          <div class="series-reps">
+            <span class="rot">Reps por série</span>
+            <div class="caixas">
+            <label><i>1</i><input type="text" inputmode="numeric" maxlength="3" data-rep="1" data-campo="pushB-6-rep1" aria-label="repetições da série 1"></label>
+            <label><i>2</i><input type="text" inputmode="numeric" maxlength="3" data-rep="2" data-campo="pushB-6-rep2" aria-label="repetições da série 2"></label>
+            <label><i>3</i><input type="text" inputmode="numeric" maxlength="3" data-rep="3" data-campo="pushB-6-rep3" aria-label="repetições da série 3"></label>
+            </div>
+          </div>
+        </div>
+        <label class="obs">Anotação de hoje <input type="text" data-campo="pushB-6-obs" placeholder="ex sobrou 2 reps na última"></label>
+        <p class="ultima" data-ultima="pushB-6"></p>
       </div>
     </article>
 
@@ -639,8 +939,20 @@
       </ul>
       <p class="dica">Puxe até o cotovelo passar da linha do tronco, sem girar a lombar.</p>
       <div class="registro" onclick="event.stopPropagation()">
-        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pullB-1-carga" placeholder="kg"></label>
-        <label>Reps <input type="text" inputmode="numeric" data-campo="pullB-1-reps" placeholder="ex 8/8/7"></label>
+        <div class="linha-reg">
+          <label class="carga">Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pullB-1-carga" placeholder="kg"></label>
+          <div class="series-reps">
+            <span class="rot">Reps por série</span>
+            <div class="caixas">
+            <label><i>1</i><input type="text" inputmode="numeric" maxlength="3" data-rep="1" data-campo="pullB-1-rep1" aria-label="repetições da série 1"></label>
+            <label><i>2</i><input type="text" inputmode="numeric" maxlength="3" data-rep="2" data-campo="pullB-1-rep2" aria-label="repetições da série 2"></label>
+            <label><i>3</i><input type="text" inputmode="numeric" maxlength="3" data-rep="3" data-campo="pullB-1-rep3" aria-label="repetições da série 3"></label>
+            <label><i>4</i><input type="text" inputmode="numeric" maxlength="3" data-rep="4" data-campo="pullB-1-rep4" aria-label="repetições da série 4"></label>
+            </div>
+          </div>
+        </div>
+        <label class="obs">Anotação de hoje <input type="text" data-campo="pullB-1-obs" placeholder="ex sobrou 2 reps na última"></label>
+        <p class="ultima" data-ultima="pullB-1"></p>
       </div>
     </article>
 
@@ -651,8 +963,19 @@
       </ul>
       <p class="dica">Pegada fechada trabalha mais a parte baixa do dorsal.</p>
       <div class="registro" onclick="event.stopPropagation()">
-        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pullB-2-carga" placeholder="kg"></label>
-        <label>Reps <input type="text" inputmode="numeric" data-campo="pullB-2-reps" placeholder="ex 8/8/7"></label>
+        <div class="linha-reg">
+          <label class="carga">Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pullB-2-carga" placeholder="kg"></label>
+          <div class="series-reps">
+            <span class="rot">Reps por série</span>
+            <div class="caixas">
+            <label><i>1</i><input type="text" inputmode="numeric" maxlength="3" data-rep="1" data-campo="pullB-2-rep1" aria-label="repetições da série 1"></label>
+            <label><i>2</i><input type="text" inputmode="numeric" maxlength="3" data-rep="2" data-campo="pullB-2-rep2" aria-label="repetições da série 2"></label>
+            <label><i>3</i><input type="text" inputmode="numeric" maxlength="3" data-rep="3" data-campo="pullB-2-rep3" aria-label="repetições da série 3"></label>
+            </div>
+          </div>
+        </div>
+        <label class="obs">Anotação de hoje <input type="text" data-campo="pullB-2-obs" placeholder="ex sobrou 2 reps na última"></label>
+        <p class="ultima" data-ultima="pullB-2"></p>
       </div>
     </article>
 
@@ -663,8 +986,19 @@
       </ul>
       <p class="dica">Tronco fixo. Se você balançar para puxar, o peso está alto demais.</p>
       <div class="registro" onclick="event.stopPropagation()">
-        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pullB-3-carga" placeholder="kg"></label>
-        <label>Reps <input type="text" inputmode="numeric" data-campo="pullB-3-reps" placeholder="ex 8/8/7"></label>
+        <div class="linha-reg">
+          <label class="carga">Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pullB-3-carga" placeholder="kg"></label>
+          <div class="series-reps">
+            <span class="rot">Reps por série</span>
+            <div class="caixas">
+            <label><i>1</i><input type="text" inputmode="numeric" maxlength="3" data-rep="1" data-campo="pullB-3-rep1" aria-label="repetições da série 1"></label>
+            <label><i>2</i><input type="text" inputmode="numeric" maxlength="3" data-rep="2" data-campo="pullB-3-rep2" aria-label="repetições da série 2"></label>
+            <label><i>3</i><input type="text" inputmode="numeric" maxlength="3" data-rep="3" data-campo="pullB-3-rep3" aria-label="repetições da série 3"></label>
+            </div>
+          </div>
+        </div>
+        <label class="obs">Anotação de hoje <input type="text" data-campo="pullB-3-obs" placeholder="ex sobrou 2 reps na última"></label>
+        <p class="ultima" data-ultima="pullB-3"></p>
       </div>
     </article>
 
@@ -675,8 +1009,19 @@
       </ul>
       <p class="dica">Sobe reto, sem rodar o ombro.</p>
       <div class="registro" onclick="event.stopPropagation()">
-        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pullB-4-carga" placeholder="kg"></label>
-        <label>Reps <input type="text" inputmode="numeric" data-campo="pullB-4-reps" placeholder="ex 8/8/7"></label>
+        <div class="linha-reg">
+          <label class="carga">Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pullB-4-carga" placeholder="kg"></label>
+          <div class="series-reps">
+            <span class="rot">Reps por série</span>
+            <div class="caixas">
+            <label><i>1</i><input type="text" inputmode="numeric" maxlength="3" data-rep="1" data-campo="pullB-4-rep1" aria-label="repetições da série 1"></label>
+            <label><i>2</i><input type="text" inputmode="numeric" maxlength="3" data-rep="2" data-campo="pullB-4-rep2" aria-label="repetições da série 2"></label>
+            <label><i>3</i><input type="text" inputmode="numeric" maxlength="3" data-rep="3" data-campo="pullB-4-rep3" aria-label="repetições da série 3"></label>
+            </div>
+          </div>
+        </div>
+        <label class="obs">Anotação de hoje <input type="text" data-campo="pullB-4-obs" placeholder="ex sobrou 2 reps na última"></label>
+        <p class="ultima" data-ultima="pullB-4"></p>
       </div>
     </article>
 
@@ -687,8 +1032,19 @@
       </ul>
       <p class="dica">Braço apoiado elimina o impulso e isola o bíceps.</p>
       <div class="registro" onclick="event.stopPropagation()">
-        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pullB-5-carga" placeholder="kg"></label>
-        <label>Reps <input type="text" inputmode="numeric" data-campo="pullB-5-reps" placeholder="ex 8/8/7"></label>
+        <div class="linha-reg">
+          <label class="carga">Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pullB-5-carga" placeholder="kg"></label>
+          <div class="series-reps">
+            <span class="rot">Reps por série</span>
+            <div class="caixas">
+            <label><i>1</i><input type="text" inputmode="numeric" maxlength="3" data-rep="1" data-campo="pullB-5-rep1" aria-label="repetições da série 1"></label>
+            <label><i>2</i><input type="text" inputmode="numeric" maxlength="3" data-rep="2" data-campo="pullB-5-rep2" aria-label="repetições da série 2"></label>
+            <label><i>3</i><input type="text" inputmode="numeric" maxlength="3" data-rep="3" data-campo="pullB-5-rep3" aria-label="repetições da série 3"></label>
+            </div>
+          </div>
+        </div>
+        <label class="obs">Anotação de hoje <input type="text" data-campo="pullB-5-obs" placeholder="ex sobrou 2 reps na última"></label>
+        <p class="ultima" data-ultima="pullB-5"></p>
       </div>
     </article>
 
@@ -699,8 +1055,19 @@
       </ul>
       <p class="dica">Fecha o trabalho de antebraço.</p>
       <div class="registro" onclick="event.stopPropagation()">
-        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pullB-6-carga" placeholder="kg"></label>
-        <label>Reps <input type="text" inputmode="numeric" data-campo="pullB-6-reps" placeholder="ex 8/8/7"></label>
+        <div class="linha-reg">
+          <label class="carga">Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pullB-6-carga" placeholder="kg"></label>
+          <div class="series-reps">
+            <span class="rot">Reps por série</span>
+            <div class="caixas">
+            <label><i>1</i><input type="text" inputmode="numeric" maxlength="3" data-rep="1" data-campo="pullB-6-rep1" aria-label="repetições da série 1"></label>
+            <label><i>2</i><input type="text" inputmode="numeric" maxlength="3" data-rep="2" data-campo="pullB-6-rep2" aria-label="repetições da série 2"></label>
+            <label><i>3</i><input type="text" inputmode="numeric" maxlength="3" data-rep="3" data-campo="pullB-6-rep3" aria-label="repetições da série 3"></label>
+            </div>
+          </div>
+        </div>
+        <label class="obs">Anotação de hoje <input type="text" data-campo="pullB-6-obs" placeholder="ex sobrou 2 reps na última"></label>
+        <p class="ultima" data-ultima="pullB-6"></p>
       </div>
     </article>
 
@@ -711,8 +1078,19 @@
       </ul>
       <p class="dica">Trabalha o sóleo, que a versão em pé não pega bem.</p>
       <div class="registro" onclick="event.stopPropagation()">
-        <label>Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pullB-7-carga" placeholder="kg"></label>
-        <label>Reps <input type="text" inputmode="numeric" data-campo="pullB-7-reps" placeholder="ex 8/8/7"></label>
+        <div class="linha-reg">
+          <label class="carga">Carga <input type="number" inputmode="decimal" step="0.5" data-campo="pullB-7-carga" placeholder="kg"></label>
+          <div class="series-reps">
+            <span class="rot">Reps por série</span>
+            <div class="caixas">
+            <label><i>1</i><input type="text" inputmode="numeric" maxlength="3" data-rep="1" data-campo="pullB-7-rep1" aria-label="repetições da série 1"></label>
+            <label><i>2</i><input type="text" inputmode="numeric" maxlength="3" data-rep="2" data-campo="pullB-7-rep2" aria-label="repetições da série 2"></label>
+            <label><i>3</i><input type="text" inputmode="numeric" maxlength="3" data-rep="3" data-campo="pullB-7-rep3" aria-label="repetições da série 3"></label>
+            </div>
+          </div>
+        </div>
+        <label class="obs">Anotação de hoje <input type="text" data-campo="pullB-7-obs" placeholder="ex sobrou 2 reps na última"></label>
+        <p class="ultima" data-ultima="pullB-7"></p>
       </div>
     </article>
 
@@ -801,6 +1179,25 @@
   <div class="cabeca">
     <h2>Notas</h2>
     <p>Divisão, adaptações para a Smart Fit e o que medir.</p>
+  </div>
+
+  <div class="aviso">
+    <b>Como preencher o registro.</b> Cada exercício tem uma caixinha por série. Anote a repetição de cada uma
+    na hora, porque 8/8/8/8 e 8/7/6/5 com a mesma carga são situações diferentes e é essa diferença que
+    diz se dá para subir o peso. As caixas já vêm com o que você fez da última vez, então o alvo é bater
+    aquilo. Se pulou uma série, deixe a caixa vazia; o registro guarda a posição.
+  </div>
+
+  <div class="aviso">
+    <b>Anotação de hoje.</b> Campo livre no fim de cada exercício, para o contexto que o número não conta:
+    quantas repetições sobraram no tanque, dor, troca de aparelho, banco ocupado. Ele vai junto no histórico
+    e começa vazio no treino seguinte. A anotação da vez anterior aparece na linha cinza logo abaixo.
+  </div>
+
+  <div class="aviso">
+    <b>Uma unidade só para a carga.</b> Escolha uma convenção e nunca mude: ou o peso total levantado,
+    ou o número que está escrito no aparelho. Se misturar halter por lado com carga total de barra,
+    a linha de progressão ao longo dos meses não vai significar nada.
   </div>
 
   <div class="aviso">
@@ -917,6 +1314,35 @@
     try { if(deposito) deposito.setItem('treino-feito', JSON.stringify({dia:hoje(), feitos:feitos})); } catch(e){}
   }
 
+  /* ---------- rascunho do dia ----------
+     o iPhone descarta a pagina quando fica em segundo plano.
+     isso guarda o que ja foi digitado e devolve na volta. */
+  var rascMem = {};
+  function lerRascunho(){
+    try {
+      if(!deposito) return rascMem;
+      var bruto = deposito.getItem('treino-rascunho');
+      if(!bruto) return {};
+      var d = JSON.parse(bruto);
+      if(d.dia !== hoje()) return {};
+      return d.campos || {};
+    } catch(e){ return rascMem; }
+  }
+  function gravarRascunho(){
+    var campos = {};
+    Array.prototype.slice.call(document.querySelectorAll('.registro input')).forEach(function(i){
+      if(i.value.trim()) campos[i.dataset.campo] = i.value;
+    });
+    rascMem = campos;
+    try { if(deposito) deposito.setItem('treino-rascunho', JSON.stringify({dia:hoje(), campos:campos})); } catch(e){}
+  }
+  function aplicarRascunho(){
+    var campos = lerRascunho();
+    Array.prototype.slice.call(document.querySelectorAll('.registro input')).forEach(function(i){
+      if(campos[i.dataset.campo]) i.value = campos[i.dataset.campo];
+    });
+  }
+
   /* ---------- historico ---------- */
   function lerHist(){
     try {
@@ -949,15 +1375,42 @@
     return document.querySelector('[data-campo="'+pid+'-'+i+'-'+tipo+'"]');
   }
 
+  function caixasDe(c){
+    return Array.prototype.slice.call(c.querySelectorAll('[data-rep]'));
+  }
+
+  /* "8/8/-/7" -> ["8","8","","7"] */
+  function partesReps(txt){
+    return (txt||'').split('/').map(function(p){
+      p = p.trim();
+      return p === '-' ? '' : p;
+    });
+  }
+
   function preencher(){
     var u = ultimos();
     cartoes.forEach(function(c){
       var ch = c.dataset.ex;
-      if(!u[ch]) return;
+      var ult = c.querySelector('[data-ultima]');
+      var reg = u[ch];
+      if(!reg){ if(ult) ult.textContent = ''; return; }
+
       var ca = c.querySelector('[data-campo$="-carga"]');
-      var re = c.querySelector('[data-campo$="-reps"]');
-      if(ca && !ca.value && u[ch].carga) ca.value = u[ch].carga;
-      if(re && !re.value && u[ch].reps) re.value = u[ch].reps;
+      if(ca && !ca.value && reg.carga) ca.value = reg.carga;
+
+      var partes = partesReps(reg.reps);
+      caixasDe(c).forEach(function(inp, i){
+        if(!inp.value && partes[i]) inp.value = partes[i];
+      });
+
+      if(ult){
+        var base = [];
+        if(reg.carga) base.push(reg.carga + ' kg');
+        if(reg.reps) base.push(reg.reps);
+        var linha = base.length ? 'última vez: ' + base.join(' · ') : '';
+        if(reg.obs) linha += (linha ? ' · ' : 'última vez: ') + '“' + reg.obs + '”';
+        ult.textContent = linha;
+      }
     });
   }
 
@@ -965,16 +1418,26 @@
     var itens = [];
     cartoes.filter(function(c){ return c.dataset.dia === pid; }).forEach(function(c){
       var ca = c.querySelector('[data-campo$="-carga"]');
-      var re = c.querySelector('[data-campo$="-reps"]');
-      itens.push({
+      var ob = c.querySelector('[data-campo$="-obs"]');
+
+      /* junta as caixas em "8/8/7/6", corta as vazias do fim e
+         marca com - as vazias do meio, para a posicao nao se perder */
+      var vals = caixasDe(c).map(function(i){ return i.value.trim(); });
+      while(vals.length && vals[vals.length-1] === '') vals.pop();
+      var reps = vals.map(function(v){ return v === '' ? '-' : v; }).join('/');
+
+      var item = {
         chave: c.dataset.ex,
         nome: c.querySelector('h3').textContent.trim(),
         prescricao: c.querySelector('.kcal').textContent.trim(),
         series: parseInt(c.dataset.series,10) || 0,
         carga: ca ? ca.value.trim() : '',
-        reps: re ? re.value.trim() : '',
+        reps: reps,
         feito: c.dataset.escolhida === '1'
-      });
+      };
+      var obs = ob ? ob.value.trim() : '';
+      if(obs) item.obs = obs;
+      itens.push(item);
     });
     var h = lerHist();
     var id = hoje()+'|'+pid;
@@ -1003,14 +1466,21 @@
     h.sessoes.forEach(function(s){
       var linhas = '';
       (s.itens||[]).forEach(function(it){
-        if(!it.feito && !it.carga && !it.reps) return;
+        if(!it.feito && !it.carga && !it.reps && !it.obs) return;
         linhas += '<tr><td>'+it.nome+'</td><td>'+(it.carga?it.carga+' kg':'—')+'</td><td>'+(it.reps||'—')+'</td></tr>';
+        if(it.obs) linhas += '<tr class="nota-linha"><td colspan="3">'+escapar(it.obs)+'</td></tr>';
       });
       if(!linhas) linhas = '<tr><td colspan="3">Sem registro de carga</td></tr>';
       html += '<div class="sessao"><h3>'+s.rotulo+'</h3><div class="quando">'+porExtenso(s.data)+'</div>'
             + '<table><tr><th>Exercício</th><th>Carga</th><th>Reps</th></tr>'+linhas+'</table></div>';
     });
     alvo.innerHTML = html;
+  }
+
+  function escapar(t){
+    return String(t)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;');
   }
 
   function recado(id, txt){
@@ -1060,6 +1530,10 @@
       if(e.target.tagName === 'INPUT') return;
       if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); alternar(c); }
     });
+  });
+
+  document.addEventListener('input', function(e){
+    if(e.target && e.target.closest && e.target.closest('.registro')) gravarRascunho();
   });
 
   /* ---------- botoes ---------- */
@@ -1154,6 +1628,7 @@
   (function(){
     var feitos = lerFeitos();
     cartoes.forEach(function(c){ if(feitos[c.dataset.ex]) c.dataset.escolhida = '1'; });
+    aplicarRascunho();
     preencher();
     render();
     atualizar();
